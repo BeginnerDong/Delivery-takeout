@@ -1,0 +1,27 @@
+@charset "UTF-8";
+/**
+ * \(^o^)/~
+ * @authors Your Name (you@example.org)
+ * @date    2019-10-9 11:19:16
+ * @version $Id$
+ */
+
+
+/* 我的订单 */
+.orderList li{background: #fff; border-radius: 8px; margin-top: 15px;padding-bottom: 15px;box-shadow: 0 0 8px rgba(0,0,0,0.1);}
+.orderList li .infor{width: 100%; display: block;}
+.orderList li .datt{padding: 10px; font-size: 12px;} 
+.orderList li .state{color: #ff3b3b;}
+.orderList li .msg{display: flex; flex-direction: column;padding: 10px 10px;background: #f8f8f8; color: #898989;}
+.orderList li .msg .child{padding:5px 0 ;}
+
+.orderList li .msg span.tit{width:60%;}
+.orderList li .msg span.mny{width: 25%; text-align: right;}
+.orderList li .msg span.num{width:15%; text-align: center;}
+.orderList li .underBtn{ display: flex; justify-content: flex-end;}
+.orderList li .Bbtn{display: block; width: 70px; padding: 0 5px; line-height: 24px; border:1px solid #2FA0ED; color: #666;text-align: center; margin-left: 15px; border-radius:20px; font-size: 12px;box-sizing: border-box;}
+.orderList .radius8{border-radius: 8px;}
+
+
+
+

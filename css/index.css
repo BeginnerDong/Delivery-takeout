@@ -1,0 +1,23 @@
+.ind_banner img{width: 100%; display: block;}
+
+.inde_msgBox li{padding-bottom:10px}
+.inde_msgBox li .Licon{width: 14px;height: 14px; display: block;margin-right: 10px;}
+.inde_msgBox li .RadrsIcon{width: 18px;height: 18px; display: block;}
+
+.store_LeftNav{width:80px;background: #f5f9fc; position: absolute; left: 0;top: 15px;}
+.store_LeftNav .item{ width: 100%; height: 50px; line-height:50px; border-bottom: 1px solid #eee; color: #999;}
+.store_LeftNav .item:last-child{border-bottom: 0;}
+.store_LeftNav .item.on{background: #fff; border-color: #fff; color: #2fa0ed; position: relative;}
+.store_LeftNav .item.on::before{content:''; width: 3px;height: 20px;background: #2FA0ED;position: absolute;top: 50%;left:0;transform: translateY(-50%);}
+.store_rightCont{padding-right: 4%;}
+
+.inde_prolis{padding: 15px 4% 60px 95px;}
+.shopOrder{ max-height:405px; overflow-y:auto;}
+.shopOrder .item{margin-bottom: 20px;}
+.shopOrder .item .infor{padding-left: 80px;position: relative;}
+.shopOrder .item .ll{width: 70px; height: 70px;border-radius: 5px;overflow: hidden; display: block;position: absolute;top: 0;left: 0;}
+.shopOrder .item .ll img{width: 100%; height: 100%; display: block;}
+.shopOrder .item .rr{height: 70px; position: relative;}
+.shopOrder .item .Bmny{position: absolute;bottom: 0;left: 0;width: 100%;box-sizing: border-box;}
+.shopOrder .item .zhe{ width: 10px; height: 10px; display: block;margin-right: 2px;}
+.addBtn{width: 16px; height: 16px;line-height: 16px;text-align: center; background: #fdd25c;border-radius: 50%;}

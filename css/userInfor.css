@@ -1,0 +1,10 @@
+
+
+/* 个人信息 */
+.userInfor li{ line-height: 50px; height: 50px; padding: 0 4%;border-bottom: 1px solid #eee; background: #fff; display: flex; justify-content: flex-start;align-items: center; flex-wrap: nowrap;}
+.userInfor li .name{ margin-right: 10px;}
+.userInfor li .edit{ width: 60%; height: 36px; line-height: 36px; display: inline-block;}
+.userInfor li .yamTest{ color: #FE3759;}
+
+
+

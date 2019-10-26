@@ -1,0 +1,13 @@
+
+/* 数量加减 */
+.numBox div{ width: 16px; height: 16px; border-radius: 50%;color: #999; font-size:32rpx ; text-align: center; line-height:16px; margin: 0 2rpx; border: 1px solid #eee; color: #999;}
+.numBox div.num{ min-width: 20px; color: #333; font-size: 28rpx;border-radius: 0;border: 0;}
+.numBox div.on{background: #fdd25c;color: #333;}
+
+.qjAlertCont{position: fixed; bottom: 0px;left: 0; width: 100%;background: #fff; z-index: 90;}
+/* 购物车数量-弹框 */
+.carMxShow .list{max-height: 240px; overflow-y: auto;}
+.carMxShow li span{width: 40%;box-sizing: border-box;}
+.carMxShow li span.L{width: 45%;}
+.carMxShow li span.M{width: 30%;text-align: center;}
+.carMxShow li span.R{width: 25%;}

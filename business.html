@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<title>商家</title>
+		<script src="./js/vue.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/base.js"></script>
+		<link type="text/css" rel="stylesheet" href="css/public.css">
+		<link rel="stylesheet" type="text/css" href="css/user.css">
+	</head>
+
+<body>
+	<div id="app">
+		<!-- 标题 -->
+		<div class="T-head line50 center fs16 Tfix-head">
+			<a class="back-next pa" href="javascript:history.go(-1);"><img class="icon" src="images/backIcon.png" ></a>商家
+		</div>
+		<div class="h50"></div>
+		<div class="userHead">
+			<div class="left">
+				<img class="photo" src="images/about-img.png" mode=""/>
+				<div style="width: 70%;">名称名称名称名称名称名称</div>
+			</div>
+		</div>
+		
+		<div class="userBox2 boxShaow radius10">
+			<div class="flexRowBetween tit">
+				<div>我的订单</div>
+				<a class="more flex" href="business_myOrder.html">查看<img class="arrowR" src="images/icon.png" ></a>
+			</div>
+			<div class="menu">
+				<ul class="flexRowBetween">
+					<li class="child">
+						<a href="business_myOrder.html">
+							<img src="images/merchants-icon.png"/>
+							<p>全部订单</p>
+						</a>
+					</li>
+					<li class="child">
+						<a href="business_myOrder.html">
+							<img src="images/merchants-icon1.png">
+							<p>待接单</p>
+						</a>
+					</li>
+					<li class="child">
+						<a href="business_myOrder.html">
+							<img src="images/merchants-icon2.png">
+							<p>待退款</p>
+						</a>
+					</li>
+					<li class="child">
+						<a href="business_myOrder.html">
+							<img src="images/merchants-icon3.png">
+							<p>已完成</p>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="XlineNav mglr4">
+			<div class="info">
+				<a href="business_myMoney.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon4.png">
+						<span class="tt">收益管理</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+			<div class="info">
+				<a href="business_store.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon5.png">
+						<span class="tt">店铺管理</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+			<div class="info">
+				<a href="business_releaseGoods.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon6.png">
+						<span class="tt">发布商品</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+			<div class="info">
+				<a href="business_goods.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon7.png">
+						<span class="tt">商品管理</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+			<div class="info">
+				<a href="business_deliveryFee.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon8.png">
+						<span class="tt">配送费用</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+			<div class="info">
+				<a href="business_cashOut.html">
+					<div class="flex">
+						<img class="icon" src="images/merchants-icon9.png">
+						<span class="tt">提现审核</span>
+					</div>
+					<div class="right">
+						<img class="arrowR" src="images/icon.png" >
+					</div>
+				</a>
+			</div>
+		</div>
+		
+	</div>
+</body>
+	
+<script type="text/javascript">
+	var app = new Vue({
+		    el: '#app',
+		    data:function(){
+		        return {
+					is_show:false,
+					mainData: []
+		        }
+		    },
+		    onLoad() {
+		    	const self = this;
+		    	// self.$Utils.loadAll(['getMainData'], self);
+		    },
+		    methods: {
+				
+				getMainData() {
+					const self = this;
+					const postData = {};
+					postData.tokenFuncName = 'getProjectToken';
+					var callback = function(res){
+					    console.log('getMainData', res);
+					    self.mainData.push.apply(self.mainData,res.info.data);		        
+					};
+					self.$apis.orderGet(postData, callback);
+				}
+		    }
+		});
+	</script>
+</html>

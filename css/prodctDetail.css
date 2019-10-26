@@ -1,0 +1,42 @@
+
+/* 详情页 */
+.detail_one{padding: 10px 4%;}
+.detail_one .tit{padding-bottom: 10px;}
+
+.detailxqBan{ width: 100%;height:200px; display: block;}
+.detailxqBan img{ width: 100%; height: 100%; display: block;}
+.xqInfor {padding: 10px 4%;}
+.xqInfor .cont div,.xqInfor .cont p{font-size: 13px;line-height: 20px;color: #666;padding-bottom: 5px;}
+.xqInfor .cont .title{font-size: 14px; color: #333;}
+.xqInfor .cont img{max-width: 100% !important; display: block;margin: 10px auto;}
+
+/* 商品评价 */	
+.detail_pj li .name{width: 65%;}	
+.detail_pj li .time{width: 35%;}	
+.detail_pj li .photo{ width: 30px; height: 30rpx; margin-right: 5px;}
+
+
+/* 详情页底部菜单 */
+.xqbotomBar {width: 100%;height: 100rpx;background: #fff;box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.1);display: flex;justify-content: space-between;align-items: center;position: fixed;bottom: 0;left: 0;right: 0; z-index: 99;box-sizing: border-box;}
+.xqbotomBar .left {width:20%;box-sizing: border-box;padding-right:10px;}
+.xqbotomBar .left .ite{width: 100%;text-align: center;font-size: 12px;color: #666;}
+.xqbotomBar .left .ite img{width: 18px;height: 18px;display: block;margin: 0 auto 10rpx auto;}
+.xqbotomBar .payBtn{width: 80%;border-radius:25px ;overflow: hidden;height:40px;}
+.xqbotomBar .payBtn .item{width: 100%; height: 40px;text-align: center;color: #333;background: #2FA0ED; display: flex;flex-direction: column;align-items: center; justify-content: center;box-sizing: border-box; color: #fff;}
+
+/*底部菜单 - 三个按钮 */
+.xqbotomBar .threeNav .item{width: 33.3%; height: 50px;}
+.xqbotomBar .threeNav .icon{ width: 19px; height: 19px;}
+.xqbotomBar .threeNav .L{background: #99deff; width: 22%;}
+.xqbotomBar .threeNav .L .L-icon{width: 18px; height: 18px; display: block;margin: 0 auto;}
+.xqbotomBar .threeNav .M{background: #7bd4ff; width: 42%;}
+.xqbotomBar .threeNav .R{background: #2FA0ED;width: 36%;}
+.xqbotomBar .CarIcon{width: 14px; height: 14px; display: block;}
+.xqbotomBar .car-num{ position: absolute;right: -15px;top: 0;width: 15px; height: 15px;border-radius: 10px;text-align: center;font-size: 10px;background: #FF3B3B;color: #fff;line-height: 15px;}
+
+.xqbotomBar .twoNav .item{width: 33.3%; height: 50px;}
+.xqbotomBar .twoNav .CarIcon{ width:22px; height: 22px;}
+.xqbotomBar .twoNav .L{width: 60%; background: #424242;}
+.xqbotomBar .twoNav .R{width: 40%; background: #DA251C;}
+
+.xqbotomBar .twoNav .L .number{min-width: 15px;border-radius: 10px; line-height:15px;background: #ff9519;color: #FFF;font-size: 12px; position: absolute; top: -8px; right:-4px;padding: 0 3px; box-sizing: border-box;}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="renderer" content="webkit">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<title>编辑收货地址</title>
+		<script src="./js/vue.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/base.js"></script>
+		<link type="text/css" rel="stylesheet" href="css/public.css">
+		<link rel="stylesheet" type="text/css" href="css/address.css">
+	</head>
+
+<body>
+	<div id="app">
+		<!-- 标题 -->
+		<div class="T-head line50 center fs16 Tfix-head">
+			<a class="back-next pa" href="javascript:history.go(-1);"><img class="icon" src="images/backIcon.png" ></a>编辑收货地址
+		</div>
+		<div class="h50"></div>
+		
+		<div class="addressAdd fs13">
+			<ul>
+				<li>
+					<div class="title">联系人：</div>
+					<div class="rightMsg">
+						<input type="text" placeholder="请输入真实姓名" value="张尧">
+					</div>
+				</li>
+				<li>
+					<div class="title">&nbsp;</div>
+					<div class="rightMsg flex sexSelt">
+						<div class="flexRowBetween sexSelt" style="width: 100px;">
+							<span class="flex" @click="change('1')"><img class="icon" :src="num==1?'images/address-icon.png':'images/address-icon2.png'">男</span>
+							<span class="flex" @click="change('2')"><img class="icon" :src="num==2?'images/address-icon.png':'images/address-icon2.png'">女</span>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="title">手机号码：</div>
+					<div class="rightMsg">
+						<input type="number" placeholder="请输入手机号码"  maxlength="11" value="15689636398">
+					</div>
+				</li>
+				<li>
+					<div class="title">选择地区：</div>
+					<div class="rightMsg flexRowBetween">
+						陕西省西安市莲湖区<img class="arrowR" src="images/icon.png" alt="">
+					</div>
+				</li>
+				<li>
+					<div class="title">详细地址：</div>
+					<div class="rightMsg">
+						<input type="text" placeholder="请输入详细地址" value="陕西省西安市莲湖区土门街道创新路70号">
+					</div>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="submitbtn" style="margin-top:50px;">
+			<a class="btn" href="address.html">保存地址</a>
+		</div>
+		<div class="submitbtn" >
+			<a class="btn" style="border:1px solid #2FA0ED;background: #fff; color: #2FA0ED;" href="confirmOrder.html">删除地址</a>
+		</div>
+		
+	</div>
+</body>
+
+	
+<script type="text/javascript">
+	var app = new Vue({
+		    el: '#app',
+		    data:function(){
+		        return {
+					is_show:false,
+					mainData: [],
+					num:1
+		        }
+		    },
+		    onLoad() {
+		    	const self = this;
+		    	// self.$Utils.loadAll(['getMainData'], self);
+		    },
+		    methods: {
+				change(num){
+					const self = this;	
+					if(num!=self.num){
+						self.num = num
+					}
+				},
+				getMainData() {
+					const self = this;
+					const postData = {};
+					postData.tokenFuncName = 'getProjectToken';
+					var callback = function(res){
+					    console.log('getMainData', res);
+					    self.mainData.push.apply(self.mainData,res.info.data);		        
+					};
+					self.$apis.orderGet(postData, callback);
+				}
+		    }
+		});
+	</script>
+</html>
