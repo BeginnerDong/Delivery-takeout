@@ -1,0 +1,20 @@
+
+
+/* 地址薄 */
+.addressLis li{ padding: 15px 0;box-sizing: border-box;background: #fff; margin-bottom: 10px;}
+.addressLis li .name{font-weight: normal; margin: 5px 0;}
+.addressLis li .xing{width: 16px; height: 16px; display: block;margin-right: 5px;}
+.addressLis li .right{}
+.addressLis li .right .tt{display: flex; align-items: center; color: #999;}
+.addressLis li .right .tt img{width: 15px; height: 15px; display: block; margin-right: 5px;}
+
+
+
+/* 添加地址 */
+.addressAdd li{ padding: 15px 4%;border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
+.addressAdd li .title{width:23%; color: #666;}
+.addressAdd li .rightMsg{ width: 77%; }
+.addressAdd li .rightMsg input{ display: block; width: 100%;font-size: 13px;}
+.addressAdd li .sexSelt .icon{width: 16px; height: 16px;display: block;margin-right: 5px;}
+
+

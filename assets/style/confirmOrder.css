@@ -1,0 +1,46 @@
+
+.adrsaAddBtn{ width: 70%; height: 36px; line-height: 36px;margin: 0 auto;border-radius: 30px;border: 1px solid #2FA0ED;}
+.confimInfor li{padding: 10px 0;border-bottom: 1px solid #eee;}
+.confimInfor li:last-child{border-bottom: 0;}
+.confimInfor .onePro{padding: 10px 0 10px 70px; position: relative; min-height: 80px;box-sizing: border-box;}
+.confimInfor .onePro .pic{width: 60px; height: 60px; display: block;border-radius: 5px;overflow: hidden; position: absolute; top: 50%;left: 0px;transform: translateY(-50%);}
+.confimInfor .onePro .pic img{width: 100%; height: 100%; display: block;}
+.confimInfor .onePro .proR{ width: 100%; height: 60px;}
+.confimInfor .onePro .proR .numb{ position: absolute; bottom: 0;left: 0;}
+.confimInfor li .Lname{width: 30%;}
+.confimInfor li .rr{width:70%;}
+.confimInfor li .rr textarea{width: 100%; height: 100px;display: block;border: none; text-align: right; color: #666;}
+
+/* 固定底部信息 */
+.qusUnderFix{position: fixed; bottom: 0;left: 0;width: 100%;box-sizing: border-box;background: #fff;box-shadow:0 -2px 5px rgba(146,146,146,0.1) ;}
+.qusUnderFix .left{ width: 60%;padding:0 4%;box-sizing: border-box;}
+.qusUnderFix .left .price{font-size: 16px;}
+.qusUnderFix .right{width: 40%;line-height: 45px;height: 45px;background: #2FA0ED; text-align: center;font-size: 15px;color: #fff;}
+
+
+.qjAlertCont{position: fixed; bottom: 0px;left: 0; width: 100%;background: #fff; z-index: 90;}
+
+/* 选择优惠券弹框 */
+.couponShow .infor{min-height: 160px;max-height: 240px; overflow-y: auto;padding-bottom: 30px; }
+.couponShow li{padding:15px 4% 0 4%; display: flex; justify-content: space-between; align-items: center;}
+.couponShow li .setIcon{width: 10%; width: 20px; height: 20px; display: block;}
+
+/* 小费弹框 */
+.tippingShow .wpMsgBox{padding-bottom: 30px;}
+.tippingShow .wpMsgBox .item{flex-wrap: wrap;}
+.tippingShow .wpMsgBox .item span{width: 30%; display: block; line-height: 28px;border: 1px solid #eee;text-align: center; margin-bottom: 10px;}
+.tippingShow .wpMsgBox .item span:last-child{ width: 100%; margin-right: 0;}
+.tippingShow .wpMsgBox .item span.on{border-color:#2FA0ED ; color: #2FA0ED;}
+
+/* 选择餐具数量弹框 */
+.cjNumShow .item{ width: 80%;margin: 0 auto 10px auto;line-height: 30px;box-sizing: border-box;border: 1px solid#FFF;}
+.cjNumShow .item.on{border: 1px solid #2FA0ED; color: #2FA0ED;}
+
+/* 时间选择 */
+.seltTimeShow .left{ width: 25%;}
+.seltTimeShow .right{width: 75%;padding-right: 4%;box-sizing: border-box;border-left: 1px solid #eee;padding-left: 15px;min-height: 80px;max-height: 240px;overflow-y: auto;}
+.seltTimeShow .right .item{padding:0px 4% 0px 0;margin: 8px 0;}
+.seltTimeShow .right span{width: 50%;box-sizing: border-box;padding: 0 5px;}
+.seltTimeShow .right .item.on{color: #2FA0ED;position: relative;}
+.seltTimeShow .right .item.on:before{content: ''; width:15px; height: 12px;background: url(../../static/images/confirm-icon3.png) no-repeat 0 0/100% 100%;position: absolute; right: 0; top: 50%;transform: translateY(-50%);}
+
