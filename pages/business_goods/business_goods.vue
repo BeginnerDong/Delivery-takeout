@@ -3,56 +3,36 @@
 		
 		<div class="pdlr4 mgt15">
 			<div class="shopOrder">
-				<div class="item radius5 boxShaow" v-for="(item,index) in proListDate" :key="index">
+				<div class="item radius5 boxShaow" v-for="(item,index) in mainData" :key="index">
 					<div class="infor">
-						<div class="ll" href="goodsDetail.html">
-							<img class="pic" src="../../static/images/home-img.png"/>
+						<div class="ll" :data-id="item.id" >
+							<img class="pic" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''"/>
 						</div>
 						<div class="rr">
-							<a class="titile fs13 avoidOverflow2" href="goodsDetail.html">标题标题标题标题标题标题标题标题</a>
+							<a class="titile fs13 avoidOverflow2" :data-id="item.id">
+								{{item.title}}</a>
 							<div class="Bmny">
 								<div class="flex">
-									<div class="price fs13">59</div>
-									<div class="flex fs12 red mgl10 mgr10"><img class="zhe" src="../../static/images/home-icon4.png">8折</div>
-									<div class="yuanJia fs12">69</div>
+									<div class="price fs13">{{item.price}}</div>
+									<div class="flex fs12 red mgl10 mgr10">
+										<img class="zhe" src="../../static/images/home-icon4.png">{{item.discount}}折</div>
+									<div class="yuanJia fs12">{{item.o_price}}</div>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="under_btn flexEnd pdt10 color6 fs12">
-						<div class="btn flexEnd" @click="Router.navigateTo({route:{path:'/pages/business_goods_edit/business_goods_edit'}})"><img class="icon" src="../../static/images/management-icon.png">修改</div>
-						<div class="btn flexEnd mgl40" @click="deltAlert"><img class="icon" src="../../static/images/management-icon.png" >删除</div>
-						<div class="btn flexEnd mgl40" @click="deltShelf"><img class="icon" src="../../static/images/management-icon.png" >下架</div>
+						<div class="btn flexEnd" :data-id="item.id"
+						@click="Router.navigateTo({route:{path:'/pages/business_goods_edit/business_goods_edit?id='+$event.currentTarget.dataset.id}})"><img class="icon" src="../../static/images/management-icon.png">修改</div>
+						<div class="btn flexEnd mgl40" 
+						@click="deleteOne(index)"><img class="icon" src="../../static/images/management-icon.png" >删除</div>
+						<div class="btn flexEnd mgl40" 
+						@click="shelfOne(index)"><img class="icon" src="../../static/images/management-icon.png" >{{item.on_shelf==1?'下架':'上架'}}</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		
-		
-		<!-- 确定删除弹框 -->
-		<div class="xieyiAlert" v-if="is_show">
-			<div class="infor center radius5" style="padding:40px 30px;height: auto;">
-				<div class="colseBtn"  @click="deltAlert" style="top: 10px;right: 10px;left:auto;">×</div>
-				<div class="tit font16 pdb30">确定删除这个商品吗？</div>
-				<div class="btnB flexRowBetween fs12">
-					<div>取消</div>
-					<div class="on">确定</div>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 确定删除下架商品弹框 -->
-		<div class="xieyiAlert" v-if="is_Shelfshow">
-			<div class="infor center radius5" style="padding:40px 30px;height: auto;">
-				<div class="colseBtn"  @click="deltShelf" style="top: 10px;right: 10px;left:auto;">×</div>
-				<div class="tit font16 pdb30">确定下架这个商品吗？</div>
-				<div class="btnB flexRowBetween fs12">
-					<div>取消</div>
-					<div class="on" >确定</div>
-				</div>
-			</div>
-		</div>
-		
+	
 	</div>
 </template>
 
@@ -73,29 +53,140 @@
 				is_Shelfshow:false
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			//self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onShow() {
+			const self = this;
+			self.mainData = [];
+			self.$Utils.loadAll(['getMainData'], self);
+		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
 			deltAlert(){
 				const self = this;
 				self.is_show=!self.is_show;
 			},
+			
 			deltShelf(){
 				const self = this;
 				self.is_Shelfshow=!self.is_Shelfshow;
 			},
-			getMainData() {
+			
+			deleteOne(index) {
 				const self = this;
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				uni.showModal({
+				    title: '提示',
+				    content: '确定删除这个商品吗',
+				    success: function (res) {
+				        if (res.confirm) {
+				             const postData = {};
+				            postData.searchItem = {
+								thirdapp_id:3
+							};
+				            postData.searchItem.id = self.mainData[index].id;
+				            postData.tokenFuncName = 'getStoreToken';
+				            postData.data = {
+				            	status:-1
+				            };
+				            const callback = (res) => {
+				            	if (res.solely_code==100000) {
+				            		self.$Utils.showToast('删除成功', 'none');
+				            		setTimeout(function() {
+				            			self.getMainData(true);
+				            		}, 500);
+				            		
+				            	}else{
+				            		self.$Utils.showToast(res.msg, 'none');
+				            	}
+				            };
+				            self.$apis.productUpdate(postData, callback)
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});		
+			},
+			
+			shelfOne(index) {
+				const self = this;
+				uni.showModal({
+				    title: '提示',
+				    content: '确定下架（上架）这个商品吗',
+				    success: function (res) {
+				        if (res.confirm) {
+				             const postData = {};
+				            postData.searchItem = {
+								thirdapp_id:3
+							};
+				            postData.searchItem.id = self.mainData[index].id;
+				            postData.tokenFuncName = 'getStoreToken';
+				            postData.data = {
+				            	on_shelf:1
+				            };
+							if(self.mainData[index].on_shelf==1){
+								postData.data.on_shelf = 0
+							};
+				            const callback = (res) => {
+				            	if (res.solely_code==100000) {
+				            		self.$Utils.showToast('操作成功', 'none');
+				            		setTimeout(function() {
+				            			self.getMainData(true);
+				            		}, 500);
+				            		
+				            	}else{
+				            		self.$Utils.showToast(res.msg, 'none');
+				            	}
+				            };
+				            self.$apis.productUpdate(postData, callback)
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});		
+			},
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 5
+					}
 				};
-				self.$apis.orderGet(postData, callback);
-			}
+				const postData = {};
+				postData.tokenFuncName = 'getStoreToken';
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					thirdapp_id: 3,
+				};		
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData, res.info.data);
+					} else {
+						self.$Utils.showToast('没有更多了', 'none');
+					};
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.productGet(postData, callback);
+			},
 		},
 	}
 </script>

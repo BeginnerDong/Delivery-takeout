@@ -2,8 +2,8 @@
 	<div>
 		<div class="userHead">
 			<div class="left">
-				<img class="photo" src="../../static/images/about-img.png" mode=""/>
-				<div style="width: 70%;">名称名称名称名称名称名称</div>
+				<img class="photo" :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" mode=""/>
+				<div style="width: 70%;">{{mainData.info?mainData.info.name:''}}</div>
 			</div>
 		</div>
 		
@@ -100,26 +100,34 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				is_show:false,
-				mainData: []
+				mainData: {}
 			}
 		},
 		onLoad() {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getMainData'], self);
 		},
 		methods: {
+			
 			getMainData() {
 				const self = this;
+				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.searchItem = {
+					thirdapp_id:3,
 				};
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.tokenFuncName = 'getStoreToken';
+				const callback = (res) => {
+					if (res.solely_code == 100000 && res.info.data[0]) {
+						self.mainData = res.info.data[0];
+					} else {
+						self.$Utils.showToast(res.msg, 'none')
+					};
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.userGet(postData, callback);
+			},
+			
 		},
 	}
 </script>

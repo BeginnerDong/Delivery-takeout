@@ -142,7 +142,7 @@ textarea{font-size: 24rpx;}
 .priceM::after{
 	content: "/㎡";
 }
-.yuanJia{ color: #999; font-size: 24rpx; text-decoration: line-through; margin-left: 20rpx;}
+.yuanJia{ color: #999; font-size: 24rpx; text-decoration: line-through; margin-left: 10rpx;}
 .yuanJia::before{content: "￥";}
 
 .pr{

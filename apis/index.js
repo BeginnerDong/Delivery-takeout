@@ -17,6 +17,79 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
+	
+	getBaiduDistance(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getBaiduDistance',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	thirdAppGet(param, callback) {
+		var allParams = {
+			url: 'Base/ThirdApp/get',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	cardGet(param, callback) {
+		var allParams = {
+			url: 'Common/UserCard/get',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	cardUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/UserCard/update',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	cardDelete(param, callback) {
+		var allParams = {
+			url: 'Common/UserCard/delete',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	cardAdd(param, callback) {
+		var allParams = {
+			url: 'Common/UserCard/add',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 
 	registerSuper(param, callback) {
 
@@ -237,6 +310,29 @@ export default {
 		http.HTTP(allParams);
 	},
 	
+	productAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Product/add',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	productUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/Product/update',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 
 	productGet(param, callback) {
 		if(!param.hasContent){

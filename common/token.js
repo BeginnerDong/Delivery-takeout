@@ -38,11 +38,14 @@ class Token {
 		console.log('new Date().getTime()',parseInt(new Date().getTime()));
 		if(!pass){
 	        var params = {
-	            thirdapp_id:2,
+	            thirdapp_id:3,
 				refreshToken:true,
 				info_name:'user_info',
 				token_name:'user_token'
 	        };
+			if(postData&&postData.parent_no){
+				params.parent_no = postData.parent_no
+			};
 			console.log('getProjectToken',callback)
 			if(callback){
 				this.getUserInfo(params,callback);
@@ -265,15 +268,15 @@ class Token {
         
     }
     
-    getMerchantToken(callback,postData) { 
-        if((postData&&postData.refreshToken)||!uni.getStorageSync('merchant_token')){
-            uni.removeStorageSync('merchant_token');
-            uni.removeStorageSync('merchant_info');
+    getStoreToken(callback,postData) { 
+        if((postData&&postData.refreshToken)||!uni.getStorageSync('storeToken')){
+            uni.removeStorageSync('storeToken');
+            uni.removeStorageSync('storeInfo');
             uni.redirectTo({
-              url: '/pages/login/login'
+              url: '/pages/business_login/business_login'
             });
         }else{
-            return uni.getStorageSync('merchant_token');
+            return uni.getStorageSync('storeToken');
         }
     }
    
@@ -335,6 +338,9 @@ class Token {
                 postData.thirdapp_id = params.thirdapp_id;  
                 
                 postData.code = res.code;
+				if(params.parent_no){
+					postData.parent_no = params.parent_no
+				};
                 if(wxUserInfo.nickName&&wxUserInfo.avatarUrl){
                     postData.nickname = wxUserInfo.nickName;
                     postData.headImgUrl = wxUserInfo.avatarUrl;

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="showAll">
 		<div>
 			<image style="width: 100%; display: block;padding-bottom:40px;" src="../../static/images/registered-img.png" mode="widthFix"/></image>
 		</div>
@@ -8,19 +8,19 @@
 			<div class="item flexCenter">
 				<div class="name"><image class="icon" src="../../static/images/registered-icon.png" /></div>
 				<div class="rr bordB1">
-					<input type="number"maxlength="11" value="" placeholder="请输入手机号码"/>
+					<input type="number"maxlength="11" value="" placeholder="请输入手机号码" v-model="submitData.login_name"/>
 				</div>
 			</div>
 			<div class="item flexCenter">
 				<div class="name"><image class="icon" src="../../static/images/registered-icon1.png" /></div>
 				<div class="rr bordB1">
-					<input type="text" value="" placeholder="请输入登录密码"/>
+					<input type="text" value="" placeholder="请输入登录密码" v-model="submitData.password"/>
 				</div>
 			</div>
 		</div>
 		
 		<div class="submitbtn" style="margin-top: 80px;">
-			<button class="btn" type="button" @click="Router.navigateTo({route:{path:'/pages/business/business'}})">登录</button>
+			<button class="btn" type="button" @click="submit">登录</button>
 		</div>
 	</div>
 </template>
@@ -31,28 +31,56 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				is_show:false,
-				mainData: []
+				submitData:{
+					login_name:'',
+					password:''
+				},
+				showAll:false
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
-		},
-		methods: {
-			getMainData() {
-				const self = this;
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
-				};
-				self.$apis.orderGet(postData, callback);
+			if (uni.getStorageSync('storeToken')) {
+				uni.redirectTo({
+					url: '/pages/business/business'
+				})
+			}else{
+				self.showAll = true
 			}
 		},
-	}
+		
+		methods: {
+			
+			submit() {
+				const self = this;
+			
+				const postData = {
+					login_name: self.submitData.login_name,
+					password:self.submitData.password
+				};
+				if (self.$Utils.checkComplete(self.submitData)) {
+					
+					const callback = (res) => {
+						if (res.solely_code == 100000) {
+							console.log(res);
+							uni.setStorageSync('storeToken', res.token);
+							uni.setStorageSync('storeInfo', res.info);
+							uni.redirectTo({
+								url: '/pages/business/business'
+							}) 
+						} else {
+							self.$Utils.showToast(res.msg,'none')
+						}
+					}
+					self.$apis.login(postData, callback);
+				} else {
+					self.$Utils.showToast('请补全登录信息', 'none')
+				};
+			},
+			
+		},
+	};
 </script>
 
 

@@ -6,15 +6,29 @@
 			</div>
 			<div class="orederDetal">
 				<ul>
-					<li class="flexRowBetween fs13 msgLis" v-for="(item,index) in msgLisDate">
+					<li class="flexRowBetween fs13 msgLis" v-if="mainData.type==5">
+						<p class="tit avoidOverflow">{{mainData.title}}</p>
+						<p class="specs flexEnd">
+							<span class="num">×{{mainData.count}}</span>
+							<span class="mny">￥{{mainData.main_price}}</span>
+						</p>
+					</li>
+					<li class="flexRowBetween fs13 msgLis" v-if="mainData.type==6" v-for="(item,index) in mainData.child[0]">
 						<p class="tit avoidOverflow">{{item.title}}</p>
 						<p class="specs flexEnd">
-							<span class="num">×{{item.num}}</span>
+							<span class="num">×{{item.count}}</span>
 							<span class="mny">￥{{item.price}}</span>
 						</p>
 					</li>
+					<li class="flexRowBetween fs13 msgLis" >
+						<p class="tit avoidOverflow">包装费</p>
+						<p class="specs flexEnd">
+							<!-- <span class="num">×{{item.count}}</span> -->
+							<span class="mny">￥{{mainData.packing_price}}</span>
+						</p>
+					</li>
 					<li class="flexEnd red">
-						合计<span class="price">54.0</span>
+						合计<span class="price">{{mainData.price}}</span>
 					</li>
 				</ul>
 			</div>
@@ -26,21 +40,21 @@
 			</div>
 			<div class="fs13 GprsMsg pdtb10">
 				<div class="item flexRowBetween mgb10">
-					<p class="adrs flex"><em class="dian" style="background: #009944;"></em>陕西省西安市雁塔区大都荟</p>
-					<span class="flexEnd"><img class="Ricon" src="../../static/images/the_order_details-icon7.png"></span>
+					<p class="adrs flex"><em class="dian" style="background: #009944;"></em>{{mainData.end_site}}</p>
+					<!-- <span class="flexEnd"><img class="Ricon" src="../../static/images/the_order_details-icon7.png"></span> -->
 				</div>
 				<div class="item flexRowBetween">
-					<p class="adrs flex"><em class="dian"></em>张丹&nbsp;15923014120</p>
-					<span class="flexEnd"><img class="Ricon" src="../../static/images/the_order_details-icon8.png"></span>
+					<p class="adrs flex"><em class="dian"></em>{{mainData.end_name}}&nbsp;{{mainData.end_phone}}</p>
+					<!-- <span class="flexEnd"><img class="Ricon" src="../../static/images/the_order_details-icon8.png"></span> -->
 				</div>
 			</div>
 		</div>
-		<div class="f5H5"></div>
-		<div class="pdlr4">
+		<div class="f5H5" v-if="mainData.passage1!=''"></div>
+		<div class="pdlr4" v-if="mainData.passage1!=''">
 			<div class="pdtb10 bordB1">
 				<div class="flex Toptit"><img class="icon" src="../../static/images/the_order_details-icon2.png">备注信息</div>
 			</div>
-			<div class="pdtb10 fs13 color6">备注信息备注信息备注信息备注信息备注信息备注信息</div>
+			<div class="pdtb10 fs13 color6">{{mainData.passage1}}</div>
 		</div>
 		<div class="f5H5"></div>
 		
@@ -51,22 +65,22 @@
 			</div>
 			<div class="pdtb10 flexRowBetween fs13">
 				<span class="color6">派单时间：</span>
-				<span>2019.10.23 14:42</span>
+				<span>{{mainData.create_time}}</span>
 			</div>
 		</div>
 		<div class="f5H5"></div>
 		
-		<div class="pdlr4">
+		<div class="pdlr4" v-if="mainData.transport_status==2">
 			<div class="pdtb10 bordB1">
 				<div class="flex Toptit"><img class="icon" src="../../static/images/the_order_details-icon4.png">配送员信息</div>
 			</div>
 			<div class="flexRowBetween pdtb10 bordB1 fs13">
 				<span>姓名：</span>
-				<span>张丹</span>
+				<span>{{mainData.riderInfo&&mainData.riderInfo[0]?mainData.riderInfo[0].name:''}}</span>
 			</div>
 			<div class="flexRowBetween pdtb10 fs13">
 				<span>电话：</span>
-				<span>15689230231</span>
+				<span>{{mainData.riderInfo&&mainData.riderInfo[0]?mainData.riderInfo[0].phone:''}}</span>
 			</div>
 		</div>
 	</div>
@@ -80,7 +94,7 @@
 				Router:this.$Router,
 				showView: false,
 				is_show:false,
-				mainData: [],
+				 mainData: {},
 				msgLisDate:[
 					{title:'韩国泡菜',num:'1',price:'21.0'},
 					{title:'韩国土豆饼',num:'1',price:'4.0'},
@@ -89,21 +103,44 @@
 				]
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			getMainData() {
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.searchItem = {
+					id:self.id
+				};
+				postData.getAfter = {
+					riderInfo:{
+						tableName:'UserInfo',
+						middleKey:'rider_no',
+						key:'user_no',
+						searchItem:{
+							status:1,
+							thirdapp_id:2
+						},
+						condition:'='
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.orderGet(postData, callback);
-			}
+			},
+			
 		},
 	}
 </script>

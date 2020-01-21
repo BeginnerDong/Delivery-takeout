@@ -49,7 +49,7 @@ export default {
                 };
 			},
             fail: function (err) {
-                
+                console.log(err)
                 uni.showToast({
                     title:'网络故障',
                     icon:'fail',

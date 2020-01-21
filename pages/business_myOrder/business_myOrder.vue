@@ -1,7 +1,7 @@
 <template>
 	<div>
 		
-		<div class="orderNav">
+		<div class="orderNav" style="top:0">
 			<div class="tt" :class="current==1?'on':''" @click="change('1')">全部订单</div>
 			<div class="tt" :class="current==2?'on':''" @click="change('2')">待接单</div>
 			<div class="tt" :class="current==3?'on':''" @click="change('3')">待退款</div>
@@ -10,120 +10,46 @@
 		
 		<div class="orderList pdlr4" style="margin-top: 60px;">
 			<ul>
-				<li>
-					<div class="infor" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
+				<li v-for="(item,index) in mainData" :key="index">
+					<div class="infor" 
+					@click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
 						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">待接单</div>
+							<div class="left color9">交易时间：{{item.create_time}}</div>
+							<div class="state" v-if="item.transport_status==0&&item.order_step==0">待接单</div>
+							<div class="state" v-if="item.transport_status==1&&item.order_step==0">已接单</div>
+							<div class="state" v-if="item.transport_status==2&&item.order_step==0">已配送</div>
+							<div class="state" v-if="item.transport_status==3&&item.order_step==0">已完成</div>
+							<div class="state" v-if="item.order_step==1">待退款</div>
+							<div class="state" v-if="item.order_step==2">已退款</div>
 						</div>
-						<div class="msg mglr10 pr radius5 fs12">
+						<div class="msg mglr10 pr radius5 fs12" v-if="item.type==5">
 							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
+								<span class="tit avoidOverflow">{{item.title}}</span>
+								<span class="num">×{{item.count}}</span>
+								<span class="mny">￥{{item.price}}</span>
 							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
+						</div>
+						<div class="msg mglr10 pr radius5 fs12" v-if="item.type==6">
+							<p class="child  flexRowBetween" v-for="c_item in item.child[0]">
+								<span class="tit avoidOverflow">{{c_item.title}}</span>
+								<span class="num">×{{c_item.count}}</span>
+								<span class="mny">￥{{c_item.unit_price}}</span>
 							</p>
 						</div>
 					</div>
 					<div class="underBtn pdlr10 mgt15">
-						<span class="Bbtn" @click="deltAlert">接单</span>
-					</div>
-				</li>
-				<li>
-					<div class="infor"  @click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
-						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">待退款</div>
+						<span class="Bbtn" v-if="item.transport_status==0&&item.order_step==0" @click="orderUpdate(item.id)">接单</span>
+						<div class="Bbtn" :data-id="item.id" v-if="item.transport_status==3&&item.isremark==1"
+						@click="Router.navigateTo({route:{path:'/pages/business_myOrder_evaluate/business_myOrder_evaluate?id='+$event.currentTarget.dataset.id}})">
+							查看评价
 						</div>
-						<div class="msg mglr10 pr radius5 fs12">
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
-							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
-							</p>
-						</div>
-					</div>
-					<div class="underBtn pdlr10 mgt15">
-						<span class="Bbtn" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_refundDetail/business_myOrder_refundDetail'}})">查看原因</span>
-						<span class="Bbtn" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_refuse/business_myOrder_refuse'}})">拒绝</span>
-						<span class="Bbtn" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_refuseOk/business_myOrder_refuseOk'}})">确定</span>
-					</div>
-				</li>
-				<li>
-					<div class="infor" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
-						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">已退款</div>
-						</div>
-						<div class="msg mglr10 pr radius5 fs12">
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
-							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
-							</p>
-						</div>
-					</div>
-					<div class="underBtn pdlr10 mgt15">
-						<div class="Bbtn" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_refundDetail/business_myOrder_refundDetail'}})">查看原因</div>
-					</div>
-				</li>
-				<li>
-					<div class="infor" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
-						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">已配送</div>
-						</div>
-						<div class="msg mglr10 pr radius5 fs12">
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
-							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
-							</p>
+						<div class="Bbtn" :data-id="item.id" v-if="item.order_step==1"
+						@click="Router.navigateTo({route:{path:'/pages/business_myOrder_refundDetail/business_myOrder_refundDetail?id='+$event.currentTarget.dataset.id}})">
+							查看原因
 						</div>
 					</div>
 				</li>
-				<li>
-					<div class="infor" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_Detail/business_myOrder_Detail'}})">
-						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">已评价</div>
-						</div>
-						<div class="msg mglr10 pr radius5 fs12">
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
-							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
-							</p>
-						</div>
-					</div>
-					<div class="underBtn pdlr10 mgt15">
-						<div class="Bbtn" @click="Router.navigateTo({route:{path:'/pages/business_myOrder_evaluate/business_myOrder_evaluate'}})">查看评价</div>
-					</div>
-				</li>
+				
 			</ul>
 		</div>
 		
@@ -152,34 +78,111 @@
 				showView: false,
 				is_show:false,
 				mainData: [],
-				current:1
+				current:1,
+				searchItem:{
+					thirdapp_id: 3,
+					level:0,
+					user_type:0,
+					pay_status:1
+				},
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			//self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onShow() {
+			const self = this;
+			self.mainData = [];
+			self.$Utils.loadAll(['getMainData'], self);
+		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
+			
+			orderUpdate(id) {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getStoreToken';
+				postData.data = {
+					transport_status:1
+				};
+				postData.searchItem = {
+					id:id,
+					user_type:0
+				};
+				const callback = (data) => {
+					uni.setStorageSync('canClick', true);
+					if (data && data.solely_code == 100000) {
+						self.$Utils.showToast('操作成功','none');
+						setTimeout(function() {
+							self.getMainData(true)
+						}, 1000);
+					} else {
+						self.$Utils.showToast(data.msg,'none')
+					}
+				};
+				self.$apis.orderUpdate(postData, callback);
+			},
+			
 			change(current) {
 				const self = this;
 				if(current!=self.current){
 					self.current = current
+					if(self.current==1){
+						delete self.searchItem.transport_status;
+						delete self.searchItem.order_step
+					}else if(self.current==2){
+						self.searchItem.transport_status = ['in',[1]]
+						self.searchItem.order_step = 0
+					}else if(self.current==3){
+						//self.searchItem.transport_status = 2
+						self.searchItem.order_step = 1
+					}else if(self.current==4){
+						self.searchItem.transport_status = 3
+						self.searchItem.order_step = 0
+					}else if(self.current==5){
+						self.searchItem.order_step = ['not in',0]
+					};
+					self.getMainData(true)
 				}
 			},
-			deltAlert(){
+			 
+			getMainData(isNew) {
 				const self = this;
-				self.is_show=!self.is_show;
-			},
-			getMainData() {
-				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.tokenFuncName = 'getStoreToken';
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData, res.info.data);
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.orderGet(postData, callback);
-			}
+			},
 		},
 	}
 </script>

@@ -1,5 +1,5 @@
 {
-    "name" : "uni-one",
+    "name" : "好鲜生配送到家",
     "appid" : "",
     "description" : "",
     "versionName" : "1.0.0",
@@ -14,7 +14,9 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {},
+        "modules" : {
+            "Push" : {}
+        },
         /* 模块配置 */
         "distribute" : {
             /* 应用发布信息 */
@@ -55,15 +57,19 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-        "appid" : "",
+        "appid" : "wx31d4ae18234487e7",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
             "postcss" : false,
-            "minified" : true
+            "minified" : false
         },
         "usingComponents" : false,
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "你的位置信息将用于小程序位置接口的效果展示"
+            }
+        }
     },
     "h5" : {
         "title" : "配送小程序-餐饮端",
@@ -71,8 +77,8 @@
             "https" : false
         },
         "router" : {
-            "base" : "/wx/"
+            "base" : "/rider/"
         },
-        "domain" : "https://www.local-scanner.com"
+        "domain" : "http://106.12.155.217"
     }
 }

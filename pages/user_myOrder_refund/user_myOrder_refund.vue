@@ -6,19 +6,26 @@
 				<li style="margin-top: 0;">
 					<div class="infor">
 						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">待配送</div>
+							<div class="left color9">交易时间：{{mainData.create_time}}</div>
+							<div class="state" v-if="mainData.transport_status==0&&mainData.order_step==0">待接单</div>
+							<div class="state" v-if="mainData.transport_status==1&&mainData.order_step==0">商家已接单</div>
+							<div class="state" v-if="mainData.transport_status==2&&mainData.order_step==0">配送中</div>
+							<div class="state" v-if="mainData.transport_status==3&&mainData.order_step==0">已完成</div>
+							<div class="state" v-if="mainData.order_step==1">退款中</div>
+							<div class="state" v-if="mainData.order_step==2">退款完成</div>
 						</div>
-						<div class="msg mglr10 pr radius5 fs12">
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==5">
 							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
+								<span class="tit avoidOverflow">{{mainData.title}}</span>
+								<span class="num">×{{mainData.count}}</span>
+								<span class="mny">￥{{mainData.price}}</span>
 							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
+						</div>
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==6">
+							<p class="child  flexRowBetween" v-for="c_item in mainData.child[0]">
+								<span class="tit avoidOverflow">{{c_item.title}}</span>
+								<span class="num">×{{c_item.count}}</span>
+								<span class="mny">￥{{c_item.unit_price}}</span>
 							</p>
 						</div>
 					</div>
@@ -30,11 +37,11 @@
 		<div class="pdlr4">
 			<div class="line40">退款原因</div>
 			<div>
-				<textarea class="w radius5 fs12" style="height: 160px;box-sizing: border-box;border: none; background: #f8f8f8;padding: 15px; display: block;" rows="" cols="" placeholder="请写下您退款的原因" value=""/>
+				<textarea v-model="submitData.reason" class="w radius5 fs12" style="height: 160px;box-sizing: border-box;border: none; background: #f8f8f8;padding: 15px; display: block;" rows="" cols="" placeholder="请写下您退款的原因" value=""/>
 			</div>
 		</div>
 		<div class="submitbtn" style="margin-top: 60px;">
-			<button class="btn" type="submit">提交</button>
+			<button class="btn" type="submit" @click="submit">提交</button>
 		</div>
 		
 	</div>
@@ -48,25 +55,81 @@
 				Router:this.$Router,
 				showView: false,
 				is_show:false,
-				mainData: []
+				mainData: {},
+				submitData:{
+					reason:'',
+					order_step:1
+				}
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			getMainData() {
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.searchItem = {
+					id:self.id
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0]
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.orderGet(postData, callback);
-			}
-		},
+			},
+			
+			orderUpdate() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				postData.data = {};
+				postData.data = self.$Utils.cloneForm(self.submitData);
+				postData.searchItem = {
+					id:self.id
+				};
+				const callback = (data) => {
+					uni.setStorageSync('canClick', true);
+					if (data && data.solely_code == 100000) {
+						self.$Utils.showToast('申请成功','none');
+						setTimeout(function() {
+							uni.navigateBack({
+								delta:1
+							})
+						}, 1000);
+					} else {
+						self.$Utils.showToast(data.msg,'none')
+					}
+					
+				};
+				self.$apis.orderUpdate(postData, callback);
+			},
+			
+			
+			submit() {
+				const self = this;
+				const pass = self.$Utils.checkComplete(self.submitData);
+				console.log('self.data.sForm', self.submitData)
+				console.log('pass', pass)
+				if (pass) {
+					self.orderUpdate()
+				} else {
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('请补全信息','success');
+				};
+			},
+			
+		}
+		
 	}
 </script>
 

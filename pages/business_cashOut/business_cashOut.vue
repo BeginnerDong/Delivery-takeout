@@ -1,21 +1,22 @@
 <template>
 	<div>
-		<div class="orderNav">
+		<div class="orderNav" style="top:0">
 			<div class="tt" :class="current==1?'on':''" @click="change('1')">提现审核</div>
 			<div class="tt" :class="current==2?'on':''" @click="change('2')">提现流水</div>
 		</div>
 		
 		<div class="pdlr4 bs-CashLis" style="margin-top: 55px;" v-show="current==1">
 			<ul>
-				<li class="radius5 boxShaow flexRowBetween" v-for="(item,index) in CashLisData" @click="Router.navigateTo({route:{path:'/pages/business_cashOutDetail/business_cashOutDetail'}})">
+				<li class="radius5 boxShaow flexRowBetween" v-for="(item,index) in mainData" :data-id="item.id"
+				@click="Router.navigateTo({route:{path:'/pages/business_cashOutDetail/business_cashOutDetail?id='+$event.currentTarget.dataset.id}})">
 					<div class="ll">
 						<p class="flex pdb10">
 							<span class="tt color6">提现金额</span>
-							<span class="red">592</span>
+							<span class="red">{{item.count}}</span>
 						</p>
 						<p class="flex">
 							<span class="tt color6">姓名</span>
-							<span class="color2">张丹</span>
+							<span class="color2">{{item.card&&item.card[0]?item.card[0].name:''}}</span>
 						</p>
 					</div>
 					<div class="rr">
@@ -29,18 +30,18 @@
 		
 		<div class="pdlr4 bs-CashLis" style="margin-top: 55px;" v-show="current==2">
 			<ul>
-				<li class="radius5 boxShaow" v-for="(item,index) in CashLisData">
+				<li class="radius5 boxShaow" v-for="(item,index) in mainData">
 					<p class="flex pdb10">
 						<span class="tt color6">提现金额</span>
-						<span class="red">592</span>
+						<span class="red">{{item.card}}</span>
 					</p>
 					<p class="flex pdb10">
 						<span class="tt color6">姓名</span>
-						<span class="color2">张丹</span>
+						<span class="color2">{{item.card&&item.card[0]?item.card[0].name:''}}</span>
 					</p>
 					<p class="flex">
 						<span class="tt color6">时间</span>
-						<span class="color2">2019/10/24</span>
+						<span class="color2">{{item.create_time}}</span>
 					</p>
 				</li>
 			</ul>
@@ -58,30 +59,86 @@
 				is_show:false,
 				mainData: [],
 				current:1,
-				CashLisData:[{},{},{}]
+				CashLisData:[{},{},{}],
+				searchItem:{
+					type:2,
+					user_type:0,
+					withdraw_status:0,
+					withdraw:1
+				}
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			//self.$Utils.loadAll(['getMainData'], self)
+		
 		},
+		
+		onShow() {
+			const self = this;
+			self.mainData = [];
+			self.$Utils.loadAll(['getMainData'], self);
+		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
 			change(current) {
 				const self = this;
 				if(current!=self.current){
-					self.current = current
+					self.current = current;
+					if(self.current==1){
+						self.searchItem.withdraw_status = 0
+					}else if(self.current==2){
+						self.searchItem.withdraw_status = 1
+					}
 				}
 			},
-			getMainData() {
+			
+			getMainData(isNew) {
 				const self = this;
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
 				};
-				self.$apis.orderGet(postData, callback);
-			}
+				const postData = {};
+				postData.tokenFuncName = 'getStoreToken';
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				postData.getAfter = {
+					card:{
+						tableName:'UserCard',
+						middleKey:'relation_id',
+						key:'id',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData, res.info.data);
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.flowLogGet(postData, callback);
+			},
 		},
 	}
 </script>

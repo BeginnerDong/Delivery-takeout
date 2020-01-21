@@ -2,15 +2,17 @@
 	<div>
 		<div class="userHead">
 			<div class="left">
-				<img class="photo" src="../../static/images/about-img.png" mode=""/>
-				<div style="width: 70%;">昵称昵称昵称昵称</div>
+				<view class="photo" style="overflow: hidden;">
+					<open-data type="userAvatarUrl"></open-data>
+				</view>
+				<div style="width: 70%;"><open-data type="userNickName"></open-data></div>
 			</div>
 		</div>
 		
 		<div class="userBox2 boxShaow radius10">
 			<div class="flexRowBetween tit">
 				<div>我的订单</div>
-				<a class="more flex" href="user_myOrder.html">查看<img class="arrowR" src="../../static/images/icon.png" ></a>
+				<a class="more flex" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder'}})">查看<img class="arrowR" src="../../static/images/icon.png" ></a>
 			</div>
 			<div class="menu">
 				<ul class="flexRowBetween">

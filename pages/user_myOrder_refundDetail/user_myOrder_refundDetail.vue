@@ -6,19 +6,26 @@
 				<li style="margin-top: 0;">
 					<div class="infor">
 						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：123356885555</div>
-							<div class="state">待配送</div>
+							<div class="left color9">交易时间：{{mainData.create_time}}</div>
+							<div class="state" v-if="mainData.transport_status==0&&mainData.order_step==0">待接单</div>
+							<div class="state" v-if="mainData.transport_status==1&&mainData.order_step==0">商家已接单</div>
+							<div class="state" v-if="mainData.transport_status==2&&mainData.order_step==0">配送中</div>
+							<div class="state" v-if="mainData.transport_status==3&&mainData.order_step==0">已完成</div>
+							<div class="state" v-if="mainData.order_step==1">退款中</div>
+							<div class="state" v-if="mainData.order_step==2">退款完成</div>
 						</div>
-						<div class="msg mglr10 pr radius5 fs12">
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==5">
 							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">韩国泡菜</span>
-								<span class="num">×1</span>
-								<span class="mny">￥21.0</span>
+								<span class="tit avoidOverflow">{{mainData.title}}</span>
+								<span class="num">×{{mainData.count}}</span>
+								<span class="mny">￥{{mainData.price}}</span>
 							</p>
-							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">牛肉土豆饼</span>
-								<span class="num">×1</span>
-								<span class="mny">￥4.0</span>
+						</div>
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==6">
+							<p class="child  flexRowBetween" v-for="c_item in mainData.child[0]">
+								<span class="tit avoidOverflow">{{c_item.title}}</span>
+								<span class="num">×{{c_item.count}}</span>
+								<span class="mny">￥{{c_item.unit_price}}</span>
 							</p>
 						</div>
 					</div>
@@ -29,7 +36,13 @@
 		<div class="pdlr4">
 			<div class="line40">退款原因</div>
 			<div>
-				<textarea disabled="disabled" class="w radius5 fs12 color6" style=" height: 100px;box-sizing: border-box;border: none; background: #f8f8f8;padding: 15px; display: block;" rows="" cols="" placeholder="" value="退款原因退款原因退款原因退款原因退款原因退款原因退款原因" />
+				<textarea disabled="disabled" class="w radius5 fs12 color6" style=" height: 100px;box-sizing: border-box;border: none; background: #f8f8f8;padding: 15px; display: block;" rows="" cols="" 
+				v-model="submitData.reason" />
+			</div>
+			<div class="line40 mgt15" v-if="submitData.reply!=''">商家回复</div>
+			<div class="pd10 f5bj radius5" v-if="submitData.reply!=''">
+				<textarea  disabled="disabled" auto-height class="w fs12 color6" style="line-height: 24px;border: none;display: block;" 
+				 v-model="submitData.reply" />
 			</div>
 		</div>
 		
@@ -44,24 +57,40 @@
 				Router:this.$Router,
 				showView: false,
 				is_show:false,
-				mainData: []
+				mainData: {},
+				submitData:{
+					reason:'',
+					reply:''
+				}
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			getMainData() {
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.searchItem = {
+					id:self.id
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						self.submitData.reason = self.mainData.reason;
+						self.submitData.reply = self.mainData.reply;
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.orderGet(postData, callback);
-			}
+			},
 		},
 	}
 </script>

@@ -34,7 +34,7 @@
 			</div>
 			<div class="line40 mgt15">商家回复</div>
 			<div class="pd10 f5bj radius5">
-				<textarea  disabled="disabled" auto-height class="w fs12 color6" style="line-height: 24px;border: none;display: block;" placeholder="" value="退款原因退款原因退款原因退款原因退款原因退款原因退款原因" />
+				<textarea   disabled="disabled" auto-height class="w fs12 color6" style="line-height: 24px;border: none;display: block;" placeholder="" value="退款原因退款原因退款原因退款原因退款原因退款原因退款原因" />
 			</div>
 		</div>
 		
