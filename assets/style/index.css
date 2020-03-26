@@ -13,11 +13,11 @@
 
 .inde_prolis{padding: 15px 4% 60px 95px;}
 .shopOrder{ max-height:405px; overflow-y:auto;}
-.shopOrder .item{margin-bottom: 20px;}
+.shopOrder .item{margin-bottom: 30px;}
 .shopOrder .item .infor{padding-left: 80px;position: relative;}
 .shopOrder .item .ll{width: 70px; height: 70px;border-radius: 5px;overflow: hidden; display: block;position: absolute;top: 0;left: 0;}
 .shopOrder .item .ll img{width: 100%; height: 100%; display: block;}
 .shopOrder .item .rr{height: 70px; position: relative;}
-.shopOrder .item .Bmny{position: absolute;bottom: 0;left: 0;width: 100%;box-sizing: border-box;}
+.shopOrder .item .Bmny{position: absolute;bottom: 0;left: 0;width: 100%;box-sizing: border-box;line-height: 36rpx;}
 .shopOrder .item .zhe{ width: 10px; height: 10px; display: block;margin-right: 2px;}
-.addBtn{width: 16px; height: 16px;line-height: 16px;text-align: center; background: #fdd25c;border-radius: 50%;}
+.addBtn{width: 40rpx; height: 40rpx;line-height: 38rpx;text-align: center; background: #fdd25c;border-radius: 50%;font-size: 34rpx;}

@@ -38,25 +38,25 @@
 			<scroll-view scroll-y="true"  :scroll-into-view="currId" @scroll="mainScroll"  scroll-with-animation="true" class="store_rightCont"  
 			:style="'height:'+(windowHeight*2 - 380)+'rpx'">
 				<div class="shopOrder" v-for="(item,index) in mainData" :id="item.id">
-					<div style="width: 100%;background: #2FA0ED;color: #fff;text-align: center;border-radius: 10rpx;">{{item.menu}}</div>
+					<div style="width: 100%;background: #2FA0ED;color: #fff;text-align: center;border-radius: 10rpx;line-height: 60rpx;">{{item.menu}}</div>
 					<div class="item">
-						<div class="infor" style="margin: 20rpx 0;"  v-for="(c_item,c_index) in item.data" :key="c_index">
+						<div class="infor" style="margin: 30rpx 0;"  v-for="(c_item,c_index) in item.data" :key="c_index">
 							<div class="ll" :data-id="c_item.id">
 								<img class="pic" :src="c_item.mainImg&&c_item.mainImg[0]?c_item.mainImg[0].url:''"/>
 							</div>
 							<div class="rr">
-								<div class="titile fs13 avoidOverflow2" :data-id="c_item.id"
+								<div class="titile fs13 avoidOverflow" :data-id="c_item.id"
 								@click="Router.navigateTo({route:{path:'/pages/goodsDetail/goodsDetail?id='+$event.currentTarget.dataset.id}})">
 									{{c_item.title}}
 								</div>
-								<div class="flexRowBetween Bmny">
+								<div class=" Bmny">
 									<div class="flex">
 										<div class="price fs13">{{c_item.price}}</div>
 										<!-- <div class="flex fs12 red mgl10 mgr10"><img class="zhe" src="../../static/images/home-icon4.png">{{c_item.discount}}折</div> -->
 										<div class="yuanJia fs12" v-if="c_item.o_price!=''">{{c_item.o_price}}</div>
 									</div>
 									
-									<div class="flexEnd">
+									<div class="flex mgt5">
 										<div class="addBtn font14" v-if="c_item.count==0"  @click="counter(index,c_index,'+')">+</div>
 										<div class="numBox flexEnd"  v-if="c_item.count>0">
 											<div class="" @click="counter(index,c_index,'-')">-</div>

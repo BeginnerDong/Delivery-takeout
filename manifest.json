@@ -62,7 +62,7 @@
             "urlCheck" : false,
             "es6" : true,
             "postcss" : false,
-            "minified" : false
+            "minified" : true
         },
         "usingComponents" : false,
         "permission" : {
