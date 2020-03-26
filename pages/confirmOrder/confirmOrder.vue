@@ -27,19 +27,23 @@
 						</div>
 					</li>
 					<li class="flexRowBetween">
-						<div class="flex">
-							<img style="width: 14px; height: 14px; display: block;" src="../../static/images/confirm-icon1.png">
+						<div class="flex" style="width: 100%;">
+							<img class="mgr5" style="width: 14px; height: 14px; display: block;" src="../../static/images/confirm-icon1.png">
 							
-							<hTimePicker sTime="8" cTime="20" interval="15" @changeTime="changeTime">
+							<hTimePicker style="width: 57%;" sTime="8" cTime="20" interval="15" @changeTime="changeTime">
 							  <view slot="pCon" class="changeTime">
 							    {{submitData.start_time}}
 							  </view>
 							</hTimePicker>
-							<span class="pubColor fs12" v-if="distance>0">大约{{time}}分钟后送达</span>
-							<span class="pubColor fs12" v-else>暂无法估算送达时间</span>
+							<span class="pubColor fs12" v-if="distance>0&&submitData.start_time=='立即送出'">预计{{time}}分钟左右送达</span>
+							<span class="pubColor fs12" v-if="distance<=0&&submitData.start_time!='立即送出'">暂无法估算送达时间</span>
 						</div>
-						<div  @click="seltTimeShow">
-							<img class="arrowR" src="../../static/images/icon.png" >
+						<div>
+							<hTimePicker  sTime="8" cTime="20" interval="15" @changeTime="changeTime">
+							  <view slot="pCon" class="changeTime">
+							    <img class="arrowR" src="../../static/images/icon.png" >
+							  </view>
+							</hTimePicker>
 						</div>
 					</li>
 				</ul>
@@ -94,15 +98,17 @@
 						</div>
 					</li>
 					
+					
 					<li class="flexRowBetween">
-						<div class="Lname">小费</div>
-						<div class="rr flexEnd color9 fs13"  @click="tippingShow">
-							{{submitData.gratuity?submitData.gratuity+'元':'请选择'}}<img class="arrowR" src="../../static/images/icon.png" ></div>
+						<div class="left">配送小费：</div>
+						<div class="right" style="display: flex;align-items: center;"  @click="tippingShow" :style="submitData.gratuity>0?'color:#000000':'color:#999'">
+							{{submitData.gratuity>0?submitData.gratuity+'元':'给小费配送更快哟'}}<img class="arrowR" src="../../static/images/icon.png" >
+						</div>
 					</li>
 					<li class="flexRowBetween" style="align-items: initial;">
 						<div class="Lname">备注</div>
 						<div class="rr flexEnd color9 fs13" v-if="!is_show">
-							<textarea rows="" cols="" placeholder="输入备注信息" v-model="submitData.passage1"></textarea>
+							<textarea rows="" cols="" style="color: #000000;" placeholder-style="color:#999;font-size:14px" placeholder="输入备注信息" v-model="submitData.passage1"></textarea>
 						</div>
 						<div class="rr flexEnd color9 fs13" v-else>
 							<text>{{submitData.passage1}}</text>
@@ -110,7 +116,7 @@
 					</li>
 					<li class="flexRowBetween">
 						<div class="Lname">餐具数量</div>
-						<div class="rr flexEnd color9 fs13" @click="cjNumShow">
+						<div class="rr flexEnd color9 fs13" @click="cjNumShow" :style="submitData.tableware!=''?'color:#000000':'color:#999'">
 							{{submitData.tableware==''?'未选择':submitData.tableware}}<img class="arrowR" src="../../static/images/icon.png" ></div>
 					</li>
 				</ul>
@@ -119,8 +125,8 @@
 		
 		<!-- 底部信息 -->
 		<cover-view class="qusUnderFix flexEnd" style="z-index: 999;">
-			<cover-view class="left flexEnd " @click="moneyMxShow">
-				合计&nbsp;<cover-view class="" style="color: #ff3b3b">¥{{pay.wxPay?pay.wxPay.price:'0.00'}}</cover-view>
+			<cover-view class="left flex " @click="moneyMxShow">
+				合计&nbsp;<cover-view class="" style="color: #ff3b3b;font-size:12px;margin-left: 15rpx;">¥{{pay.wxPay?pay.wxPay.price:'0.00'}}</cover-view>
 			</cover-view>
 			<cover-view class="right" style="z-index: 100;"  @click="Utils.stopMultiClick(submit)">提交订单</cover-view>
 		</cover-view>
@@ -151,11 +157,11 @@
 				<span>小费</span>
 				<span class="pucolor fs12" @click="confirmTip()">确定</span>
 			</div>
-			<div class="wpMsgBox pdlr4 mgt20">
+			<div class="wpMsgBox pdlr4 mgt20" style="padding-bottom: 50px;">
 				<div class="item flexRowBetween">
 					<span v-for="(item,index) in tipDate" :key="index" :class="seltCurr == index?'on':''" 
-					@click="seltSpecs(index)">{{item}}</span>
-					<span><input placeholder="其他金额" v-model="tip" @focus="tipInput()"/></span>
+					@click="seltSpecs(index)">{{item.name}}</span>
+					<span><input style="height: 28px;" placeholder="其他金额" v-model="tip" @focus="tipInput()"/></span>
 				</div>
 			</div>
 		</div>
@@ -213,7 +219,8 @@
 				 seltCur:0,
 				seltCurr:-1,
 				tipCurr:0,
-				tipDate:['5元','10元','15元','20元','25元'],
+				tipDate:[{name:'不加了',value:0},{name:'2元',value:2},{name:'5元',value:5},
+				{name:'10元',value:10},{name:'15元',value:15},{name:'20元',value:20}],
 				cjNumCurr:0,
 				is_cjNumShow:false,
 				cjNumDate:['无需餐具','1份','2份','3份','4份'],
@@ -329,6 +336,12 @@
 		
 		methods: {
 			
+			changeTime(e){
+				const self = this;
+				self.submitData.start_time = e
+				console.log(e)
+			},
+			
 			getBaiduDistance() {
 				const self = this;
 				const postData = {
@@ -342,7 +355,7 @@
 					if(res.solely_code==100000){
 						self.distance = parseFloat(res.info.distance/1000).toFixed(2);
 						self.submitData.total_distance = self.distance;
-						self.time = parseInt(self.distance*uni.getStorageSync('user_info').thirdApp.custom_rule.time);
+						self.time = parseInt(self.distance*uni.getStorageSync('user_info').thirdApp.custom_rule.time)+parseInt(uni.getStorageSync('user_info').thirdApp.custom_rule.basic_time);
 						self.getMainData()
 					}else{
 						self.$Utils.showToast(res.msg, 'none');
@@ -415,6 +428,9 @@
 				const callback = (res) => {
 					if (res && res.solely_code == 100000) {
 						self.orderId = res.info.id;
+						for (var i = 0; i < orderList.length; i++) {
+							self.$Utils.delStorageArray('cartDataTwo', orderList[i], 'id');
+						}
 						self.payNow()
 					} else {		
 						uni.setStorageSync('canClick', true);
@@ -529,18 +545,26 @@
 			
 			// 配送费弹框
 			
+			tippingShow(){
+				const self = this;
+				
+				self.is_show = !self.is_show
+				self.is_tippingShow = !self.is_tippingShow
+				if(self.seltCurr==-1){
+					self.seltCurr=0;
+					self.tip = self.tipDate[0].value;
+				}
+				
+			},
+			
 			seltSpecs(index){
 				const self = this;
 				self.seltCurr=index;
-				self.tip = parseInt(self.tipDate[self.seltCurr]);
+				self.tip =self.tipDate[self.seltCurr].value;
 				console.log('self.tip',self.tip)
 			},
 			
-			tippingShow(){
-				const self = this;
-				self.is_show = !self.is_show
-				self.is_tippingShow = !self.is_tippingShow
-			},
+			
 			
 			confirmTip(){
 				const self = this;

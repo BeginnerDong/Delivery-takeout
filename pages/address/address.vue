@@ -4,7 +4,7 @@
 		<div class="addressLis fs13 color6 pdlr4">
 			<ul>
 				<li class="bordB1" v-for="(item,index) in mainData" :key="index">
-					<div class="flexRowBetween">
+					<div class="flexRowBetween" @click="choose(index)">
 						<div class="" style="width: 88%;">
 							<p class="adrs color3">{{item.city+item.detail}}</p>
 							 <p class="flex fs13 color9 name">
@@ -80,6 +80,9 @@
 				self.choosedIndex = index;
 				uni.setStorageSync('choosedAddressData', self.mainData[index]);
 				console.log('choosedIndex', self.choosedIndex);
+				uni.navigateBack({
+					delta:1
+				})
 			},
 
 			getMainData() {

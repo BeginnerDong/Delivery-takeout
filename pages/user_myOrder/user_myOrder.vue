@@ -116,7 +116,7 @@
 						self.searchItem.transport_status = 3
 						self.searchItem.order_step = 0
 					}else if(self.current==5){
-						self.searchItem.order_step = ['not in',0]
+						self.searchItem.order_step = ['not in',[0]]
 					};
 					self.getMainData(true)
 				}

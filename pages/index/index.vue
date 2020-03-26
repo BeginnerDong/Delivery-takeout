@@ -29,14 +29,16 @@
 		<div class="f5H5"></div>
 		
 		<div class="inde_prolis pr" style="min-height: 260px;">
-			<scroll-view class="store_LeftNav center" scroll-y="true" :style="'height:'+(windowHeight*2 - 380)+'rpx'">
+			<scroll-view class="store_LeftNav center"  scroll-y="true" :style="'height:'+(windowHeight*2 - 380)+'rpx'">
 				<div class="item" v-for="(item,index) in labelData" 
-				:class="curr==item.id?'on':''"  :key="index" @click="changeNav(item.id)">
+				:class="curr==index?'on':''"  :key="index" @click="changeNav(index)">
 				{{item.title}}
 				</div>
 			</scroll-view>
-			<scroll-view scroll-y="true"  :scroll-into-view="curr"  scroll-with-animation="true" class="store_rightCont"  :style="'height:'+(windowHeight*2 - 380)+'rpx'">
+			<scroll-view scroll-y="true"  :scroll-into-view="currId" @scroll="mainScroll"  scroll-with-animation="true" class="store_rightCont"  
+			:style="'height:'+(windowHeight*2 - 380)+'rpx'">
 				<div class="shopOrder" v-for="(item,index) in mainData" :id="item.id">
+					<div style="width: 100%;background: #2FA0ED;color: #fff;text-align: center;border-radius: 10rpx;">{{item.menu}}</div>
 					<div class="item">
 						<div class="infor" style="margin: 20rpx 0;"  v-for="(c_item,c_index) in item.data" :key="c_index">
 							<div class="ll" :data-id="c_item.id">
@@ -50,8 +52,8 @@
 								<div class="flexRowBetween Bmny">
 									<div class="flex">
 										<div class="price fs13">{{c_item.price}}</div>
-										<div class="flex fs12 red mgl10 mgr10"><img class="zhe" src="../../static/images/home-icon4.png">{{c_item.discount}}折</div>
-										<div class="yuanJia fs12">{{c_item.o_price}}</div>
+										<!-- <div class="flex fs12 red mgl10 mgr10"><img class="zhe" src="../../static/images/home-icon4.png">{{c_item.discount}}折</div> -->
+										<div class="yuanJia fs12" v-if="c_item.o_price!=''">{{c_item.o_price}}</div>
 									</div>
 									
 									<div class="flexEnd">
@@ -149,6 +151,7 @@
 				totalPrice:0,
 				originData:[],
 				windowHeight:'',
+				currId:''
 			}
 		},
 		
@@ -218,6 +221,14 @@
 					})
 				};
 			};
+			for (var i = 0; i < self.mainData.length; i++) {
+				if(i>0){
+					self.mainData[i].height = self.mainData[i].data.length*70+50+self.mainData[i-1].height
+				}else{
+					self.mainData[i].height = self.mainData[i].data.length*70+50
+				}
+				
+			}
 			self.countPrice();
 			console.log('self.cartData',self.cartData)
 		},
@@ -225,6 +236,8 @@
 
 		
 		methods: {
+			
+			
 			
 			onShareAppMessage: function(ops) {
 				console.log(ops)
@@ -306,6 +319,50 @@
 								self.$Utils.delStorageArray('cartDataTwo', self.cartData[i], 'id');
 							};
 							self.cartData = self.$Utils.getStorageArray('cartDataTwo');
+							self.carMxShow()
+							console.log('self.cartData',self.cartData)
+							for (var i = 0; i < self.cartData.length; i++) {
+								for (var j = 0; j < self.originData.length; j++) {
+									if(self.cartData[i].id==self.originData[j].id){
+										self.originData[j].count = self.cartData[i].count
+									}
+								}
+							};
+							console.log('self.originData',self.originData)
+							self.mainData = [];
+							console.log('aaaaaa?')
+							for (var i = 0; i < self.originData.length; i++) {
+								if(self.mainData.length>0){
+									var hasone = false;
+									for(var j =0;j<self.mainData.length;j++){
+										if(self.originData[i].label[self.originData[i].category_id].title==self.mainData[j].menu){
+											self.mainData[j].data.push(self.originData[i]);
+											hasone = true;
+										};
+									};
+									if(!hasone){
+										self.mainData.push({
+											menu: self.originData[i].label[self.originData[i].category_id].title,
+											id:'a'+ self.originData[i].label[self.originData[i].category_id].id,
+											data:[self.originData[i]]
+										});
+									};
+								}else{
+									self.mainData.push({
+										menu: self.originData[i].label[self.originData[i].category_id].title,
+										id:'a'+ self.originData[i].label[self.originData[i].category_id].id,
+										data:[self.originData[i]]
+									})
+								};
+							};
+							for (var i = 0; i < self.mainData.length; i++) {
+								if(i>0){
+									self.mainData[i].height = self.mainData[i].data.length*70+50+self.mainData[i-1].height
+								}else{
+									self.mainData[i].height = self.mainData[i].data.length*70+50
+								}
+								
+							}
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
@@ -320,7 +377,23 @@
 			
 			changeNav(index){
 				const self = this;
-				self.curr = index
+				self.curr = index;
+				self.currId = self.labelData[self.curr].id;
+				console.log(self.currId)
+			},
+			
+			mainScroll(e){
+				console.log(e.detail.scrollTop);
+				const self = this;
+				for (var i = 0; i < self.mainData.length; i++) {
+					if(e.detail.scrollTop>self.mainData[i].height&&e.detail.scrollTop<self.mainData[i+1].height){
+						self.curr = i+1
+						console.log('curr',self.curr)
+					}
+					if(e.detail.scrollTop<self.mainData[0].height){
+						self.curr = 0
+					}
+				}
 			},
 			
 			carMxShow(){
@@ -417,6 +490,14 @@
 						})
 					};
 				};
+				for (var i = 0; i < self.mainData.length; i++) {
+					if(i>0){
+						self.mainData[i].height = self.mainData[i].data.length*70+50+self.mainData[i-1].height
+					}else{
+						self.mainData[i].height = self.mainData[i].data.length*70+50
+					}
+					
+				}
 				console.log('23243',self.$Utils.getStorageArray('cartDataTwo'))
 				self.countPrice()
 			},
@@ -495,8 +576,9 @@
 						for (var i = 0; i < self.labelData.length; i++) {
 							self.labelData[i].id = 'a'+self.labelData[i].id
 						};
-						self.curr = self.labelData[0].id;
-						console.log('self.originData',self.originData)
+						self.currId = self.labelData[0].id;
+						
+						console.log('self.curr',self.curr)
 						for (var i = 0; i < res.info.data.length; i++) {
 							res.info.data[i].count=0;
 							
@@ -512,17 +594,28 @@
 									self.mainData.push({
 										menu: res.info.data[i].label[res.info.data[i].category_id].title,
 										id:'a'+ res.info.data[i].label[res.info.data[i].category_id].id,
-										data:[res.info.data[i]]
+										data:[res.info.data[i]],
+										
 									});
 								};
 							}else{
 								self.mainData.push({
 									menu: res.info.data[i].label[res.info.data[i].category_id].title,
 									id:'a'+ res.info.data[i].label[res.info.data[i].category_id].id,
-									data:[res.info.data[i]]
+									data:[res.info.data[i]],
+									
 								})
 							};
 						};
+						
+						for (var i = 0; i < self.mainData.length; i++) {
+							if(i>0){
+								self.mainData[i].height = self.mainData[i].data.length*70+50+self.mainData[i-1].height
+							}else{
+								self.mainData[i].height = self.mainData[i].data.length*70+50
+							}
+							
+						}
 					};
 					console.log('self.mainData', self.mainData)
 					self.$Utils.finishFunc('getMainData');

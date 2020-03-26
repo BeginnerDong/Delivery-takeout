@@ -70,9 +70,9 @@
 			},
 			pickerTap: function() {
 				let date = new Date();
-				let monthDay = [];
-				let hours = [];
-				let minute = [];
+				let monthDay = ['立即送出'];
+				let hours = [''];
+				let minute = [''];
 				this.sDayNum = this.sDay;
 
 				// 时
@@ -218,16 +218,21 @@
 				}
 			},
 			bindStartMultiPickerChange(e) {
+				console.log('e',e)
+				if(e.detail.value[0]==0){
+					this.$emit('changeTime', '立即取件')
+					return
+				};
 				this.multiIndex = e.detail.value;
 				let da = this.multiArray;
 				let di = e.detail.value;
-
+				
 				let caseDate = da[0][di[0]] + ' ' + da[1][di[1]].replace('时', ':') + this.timeFormat(da[2][di[2]].replace('分', '')) +
 					":00"
 
 
 				let appointTime = new Date(caseDate).getTime() / 1000;
-
+				
 				if (appointTime < new Date().getTime() / 1000) {
 					uni.showToast({
 						title: '不能选择过去时间',
