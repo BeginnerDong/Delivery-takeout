@@ -87,8 +87,9 @@
 					<div class="fs12 flexColumn">
 						<div class="pr price" v-if="cartData.length>0" @click="carMxShow">
 						<span class="pr">{{totalPrice}}<em class="car-num">{{cartData.length}}</em></span></div>
-					<!-- <p>配送费￥10</p>	 -->
+					
 					<p v-if="cartData.length==0">购物车是空的~</p>
+					<p v-if="lessPrice<0" style="color: #fff;">¥还差{{-lessPrice}}起送</p>	
 					</div>
 				</div>
 				<a class="item R flexCenter white" @click="goBuy()">去结算</a>
@@ -151,7 +152,9 @@
 				totalPrice:0,
 				originData:[],
 				windowHeight:'',
-				currId:''
+				currId:'',
+				thirdAppData:{},
+				lessPrice:0
 			}
 		},
 		
@@ -271,7 +274,7 @@
 				if(parseFloat(self.totalPrice)<parseFloat(self.thirdAppData.custom_rule.limit_price)){
 					uni.showModal({
 					    title: '提示',
-					    content: '起送价'+parseFloat(self.thirdAppData.custom_rule.limit_price),
+					    content: '起送金额¥'+parseFloat(self.thirdAppData.custom_rule.limit_price)+'起',
 						confirmColor:'#ca1c1d',
 					    success: function (res) {
 					        if (res.confirm) {
@@ -511,7 +514,9 @@
 					self.$Utils.setStorageArray('cartDataTwo',self.cartData[i], 'id', 999);
 				}
 				
-				self.totalPrice = parseFloat(self.totalPrice).toFixed(2)
+				self.totalPrice = parseFloat(self.totalPrice).toFixed(2);
+			
+				self.lessPrice = self.totalPrice - parseFloat(self.thirdAppData.custom_rule.limit_price)
 			},
 			
 			getUserInfoData() {
