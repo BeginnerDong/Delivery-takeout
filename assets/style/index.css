@@ -12,7 +12,7 @@
 .store_rightCont{padding-right: 4%;}
 
 .inde_prolis{padding: 15px 4% 60px 95px;}
-.shopOrder{ max-height:405px; overflow-y:auto;}
+
 .shopOrder .item{margin-bottom: 30px;}
 .shopOrder .item .infor{padding-left: 80px;position: relative;}
 .shopOrder .item .ll{width: 70px; height: 70px;border-radius: 5px;overflow: hidden; display: block;position: absolute;top: 0;left: 0;}

@@ -29,7 +29,7 @@
 		<div class="pdlr4 pdt15">
 			<h2 class="ftn title">商品评论</h2>
 			<div class="detail_pj">
-				<ul>
+				<ul v-if="messageData.length>0">
 					<li class="bordB1 pdtb10" v-for="(item,index) in messageData" :key="index">
 						<div class="flexRowBetween fs12">
 							<div class="flex name color6 pdb5">
@@ -41,6 +41,9 @@
 						<h2 class="ftn text fs13">{{item.content}}</h2>
 					</li>
 					
+				</ul>
+				<ul v-else style="width: 100%;text-align: center;margin-top: 50rpx;">
+					<div>暂无评论~</div>
 				</ul>
 			</div>
 			
@@ -234,7 +237,7 @@
 				};
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
-				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
 				postData.searchItem = {
 					thirdapp_id: 3,
 					relation_id :self.id,
@@ -247,6 +250,7 @@
 					console.log('23',res.info.total)
 					self.totalMessage = res.info.total;
 					console.log('self.messageData', self.messageData)
+					self.$Utils.finishFunc('getMessageData');
 				};
 				self.$apis.messageGet(postData, callback);
 			},

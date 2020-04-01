@@ -26,26 +26,27 @@
 						src="../../static/images/confirm-icon.png" >新增收货地址
 						</div>
 					</li>
-					<li class="flexRowBetween">
-						<div class="flex" style="width: 100%;">
-							<img class="mgr5" style="width: 14px; height: 14px; display: block;" src="../../static/images/confirm-icon1.png">
-							
-							<hTimePicker style="width: 57%;" sTime="8" cTime="20" interval="15" @changeTime="changeTime">
-							  <view slot="pCon" class="changeTime">
-							    {{submitData.start_time}}
-							  </view>
-							</hTimePicker>
-							<span class="pubColor fs12" v-if="distance>0&&submitData.start_time=='立即送出'">预计{{time}}分钟左右送达</span>
-							<span class="pubColor fs12" v-if="distance<=0&&submitData.start_time!='立即送出'">暂无法估算送达时间</span>
-						</div>
-						<div>
-							<hTimePicker  sTime="8" cTime="20" interval="15" @changeTime="changeTime">
-							  <view slot="pCon" class="changeTime">
-							    <img class="arrowR" src="../../static/images/icon.png" >
-							  </view>
-							</hTimePicker>
-						</div>
-					</li>
+					<hTimePicker  sTime="8" cTime="20" interval="15" @changeTime="changeTime">
+					  <view slot="pCon" class="changeTime">
+					    <li class="flexRowBetween">
+					    	<div class="flex" style="width: 100%;">
+					    		<img class="mgr5" style="width: 14px; height: 14px; display: block;" src="../../static/images/confirm-icon1.png">
+					    		
+					    		<hTimePicker style="width: 57%;" sTime="8" cTime="20" interval="15" @changeTime="changeTime">
+					    		  <view slot="pCon" class="changeTime">
+					    		    {{submitData.start_time}}
+					    		  </view>
+					    		</hTimePicker>
+					    		<span class="pubColor fs12" v-if="distance>0">预计{{time}}分钟左右送达</span>
+					    		<span class="pubColor fs12" v-if="distance<=0">暂无法估算送达时间</span>
+					    	</div>
+					    	<div>
+					    		<img class="arrowR" src="../../static/images/icon.png" >
+					    	</div>
+					    </li>
+					  </view>
+					</hTimePicker>
+					
 				</ul>
 			</div>
 		</div>
@@ -820,7 +821,7 @@
 				if(self.tip>0){
 					self.submitData.gratuity = self.tip;
 					self.totalPrice = (parseFloat(self.totalPrice) +  parseFloat(self.submitData.gratuity)).toFixed(2);
-					self.moneyMxDate.push({title:'小费',price:'￥'+self.submitData.gratuity})
+				
 				};
 				
 				if(self.couponTotalPrice>0){
@@ -853,7 +854,10 @@
 				console.log('22',parseFloat(self.shopPrice))
 				console.log('22',parseFloat(self.couponTotalPrice))
 				console.log('22',parseFloat(hasReduce))
-				
+				if(self.tip>0){
+					
+					self.moneyMxDate.push({title:'小费',price:'￥'+self.submitData.gratuity})
+				};
 				var wxPay = parseFloat(self.totalPrice) + parseFloat(self.shopPrice) - parseFloat(self.couponTotalPrice) - parseFloat(hasReduce);
 				
 				if (wxPay > 0) {

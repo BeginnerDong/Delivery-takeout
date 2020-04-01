@@ -89,7 +89,7 @@
 						<span class="pr">{{totalPrice}}<em class="car-num">{{cartData.length}}</em></span></div>
 					
 					<p v-if="cartData.length==0">购物车是空的~</p>
-					<p v-if="lessPrice<0" style="color: #fff;">¥还差{{-lessPrice}}起送</p>	
+					<p v-if="lessPrice<0&&cartData.length>0" style="color: #fff;">¥还差{{-lessPrice}}起送</p>	
 					</div>
 				</div>
 				<a class="item R flexCenter white" @click="goBuy()">去结算</a>
@@ -365,7 +365,8 @@
 									self.mainData[i].height = self.mainData[i].data.length*70+50
 								}
 								
-							}
+							};
+							self.countPrice()
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
@@ -516,7 +517,7 @@
 				
 				self.totalPrice = parseFloat(self.totalPrice).toFixed(2);
 			
-				self.lessPrice = self.totalPrice - parseFloat(self.thirdAppData.custom_rule.limit_price)
+				self.lessPrice = parseFloat(self.totalPrice - parseFloat(self.thirdAppData.custom_rule.limit_price)).toFixed(2)
 			},
 			
 			getUserInfoData() {

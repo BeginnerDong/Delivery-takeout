@@ -21,7 +21,7 @@
 					</div>
 					<div>
 						<div class="flex fs12 color9" :data-id="item.id" @click="updateAddress($event.currentTarget.dataset.id)">
-							<image class="xing" :src="item.isdefault==1?'../../static/images/address-icon.png':'../../static/images/address-icon2.png'"/>
+						 	<image class="xing" :src="item.isdefault==1?'../../static/images/address-icon.png':'../../static/images/address-icon2.png'"/>
 							<span>默认地址</span>
 						</div>
 					</div>
@@ -30,8 +30,8 @@
 			</ul>
 		</div>
 		
-		<div class="submitbtn" style="margin-top: 80px;">
-			<button class="btn flexCenter w" @click="Router.navigateTo({route:{path:'/pages/address_add/address_add'}})" style="display: flex;"><image style="width: 15px; height: 15px; display: block;margin-right: 10px;" src="../../static/images/address-icon3.png" />新增收货地址</button>
+		<div class="submitbtn" style="margin-top: 80px;position: fixed;">
+			<a class="btn" style="position: fixed;margin: 0;bottom: 0;width: 100%;border-radius: 0;"   @click="Router.redirectTo({route:{path:'/pages/address_add/address_add?name='+name}})">添加地址</a>
 		</div>
 	</div>
 </template>
