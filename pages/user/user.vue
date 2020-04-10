@@ -16,19 +16,19 @@
 			</div>
 			<div class="menu">
 				<ul class="flexRowBetween">
-					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder'}})">
+					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder?num=2'}})">
 						<img src="../../static/images/about-icon.png"/>
 						<p>待配送</p>
 					</li>
-					<li class="child"  @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder'}})">
+					<li class="child"  @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder?num=3'}})">
 						<img src="../../static/images/about-icon1.png">
 						<p>配送中</p>
 					</li>
-					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder'}})">
+					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder?num=4'}})">
 						<img src="../../static/images/about-icon2.png">
 						<p>已完成</p>
 					</li>
-					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder'}})">
+					<li class="child" @click="Router.navigateTo({route:{path:'/pages/user_myOrder/user_myOrder?num=5'}})">
 						<img src="../../static/images/about-icon3.png">
 						<p>退款</p>
 					</li>

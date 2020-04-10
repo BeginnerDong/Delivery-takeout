@@ -5,26 +5,26 @@
 				<li style="margin-top: 0;">
 					<div class="infor">
 						<div class="datt flexRowBetween bordB1 mgb10">
-							<div class="left color9">交易时间：{{item.create_time}}</div>
-							<div class="state" v-if="item.transport_status==0&&item.order_step==0">待接单</div>
-							<div class="state" v-if="item.transport_status==1&&item.order_step==0">商家已接单</div>
-							<div class="state" v-if="item.transport_status==2&&item.order_step==0">配送中</div>
-							<div class="state" v-if="item.transport_status==3&&item.order_step==0">已完成</div>
-							<div class="state" v-if="item.order_step==1">退款中</div>
-							<div class="state" v-if="item.order_step==2">退款完成</div>
+							<div class="left color9">交易时间：{{mainData.create_time}}</div>
+							<div class="state" v-if="mainData.transport_status==0&&mainData.order_step==0">待接单</div>
+							<div class="state" v-if="mainData.transport_status==1&&mainData.order_step==0">商家已接单</div>
+							<div class="state" v-if="mainData.transport_status==2&&mainData.order_step==0">配送中</div>
+							<div class="state" v-if="mainData.transport_status==3&&mainData.order_step==0">已完成</div>
+							<div class="state" v-if="mainData.order_step==1">退款中</div>
+							<div class="state" v-if="mainData.order_step==2">退款完成</div>
 						</div>
-						<div class="msg mglr10 pr radius5 fs12" v-if="item.type==5">
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==5">
 							<p class="child  flexRowBetween">
-								<span class="tit avoidOverflow">{{item.title}}</span>
-								<span class="num">×{{item.count}}</span>
-								<span class="mny">￥{{item.price}}</span>
+								<span class="tit avoidOverflow">{{mainData.title}}</span>
+								<span class="num">×{{mainData.count}}</span>
+								<span class="mny">￥{{mainData.price}}</span>
 							</p>
 						</div>
-						<div class="msg mglr10 pr radius5 fs12" v-if="item.type==6">
-							<p class="child  flexRowBetween" v-for="c_item in item.child[0]">
-								<span class="tit avoidOverflow">{{c_item.title}}</span>
-								<span class="num">×{{c_item.count}}</span>
-								<span class="mny">￥{{c_item.unit_price}}</span>
+						<div class="msg mglr10 pr radius5 fs12" v-if="mainData.type==6">
+							<p class="child  flexRowBetween" v-for="item in mainData.child[0]">
+								<span class="tit avoidOverflow">{{item.title}}</span>
+								<span class="num">×{{item.count}}</span>
+								<span class="mny">￥{{item.unit_price}}</span>
 							</p>
 						</div>
 					</div>
@@ -57,11 +57,13 @@
 				is_show:false,
 				mainData: {},
 				submitData:{
+					mainImg:[],
 					
 					order_no:'',
 					relation_id:'',
 					content:'',
-					type:2
+					type:2,
+					title:''
 				}
 			}
 		},
@@ -70,6 +72,8 @@
 			const self = this;
 			self.id = options.id;
 			self.$Utils.loadAll(['getMainData'], self);
+			self.submitData.mainImg = [{type:'image',url:uni.getStorageSync('user_info').headImgUrl}];
+			self.submitData.title = uni.getStorageSync('user_info').nickname
 		},
 		
 		methods: {
@@ -84,7 +88,12 @@
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.mainData = res.info.data[0];
-						
+						if(self.mainData.type==5){
+							self.submitData.relation_id = self.mainData.product_id
+						}else{
+							self.submitData.relation_id = self.mainData.child[0][0].id
+						}
+						self.submitData.order_no = self.mainData.order_no
 					}
 					console.log('self.mainData', self.mainData)
 					self.$Utils.finishFunc('getMainData');
@@ -130,13 +139,13 @@
 						}
 					)
 				}else if(self.mainData.type==6){
-					for (var i = 0; i < self.mainData.child.length; i++) {
+					for (var i = 0; i < self.mainData.child[0].length; i++) {
 						postData.saveAfter.push(
 							{
 							  tableName:'Order',
 							  FuncName:'update',
 							  searchItem:{
-								order_no:self.mainData.child[i].order_no
+								order_no:self.mainData.child[0][i].order_no
 							  },
 							  data:{
 								isremark:1,

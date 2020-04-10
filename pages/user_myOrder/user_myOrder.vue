@@ -47,10 +47,10 @@
 						  @click="Router.navigateTo({route:{path:'/pages/user_myOrder_refundDetail/user_myOrder_refundDetail?id='+$event.currentTarget.dataset.id}})">
 							查看详情
 						</span>     
-						<!-- <span class="Bbtn" v-if="item.transport_status==3&&item.isremark==0" :data-id="item.id"
+						<span class="Bbtn" v-if="item.transport_status==3&&item.isremark==0" :data-id="item.id"
 						@click="Router.navigateTo({route:{path:'/pages/user_myOrder_evaluate/user_myOrder_evaluate?id='+$event.currentTarget.dataset.id}})">
 						去评价
-						</span> -->
+						</span>
 					</div>
 				</li>
 			
@@ -81,12 +81,19 @@
 			const self = this;
 			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
 			//self.$Utils.loadAll(['getMainData'], self);
+			if(options.num){
+				self.num = options.num
+			}
 		},
 		
 		onShow() {
 			const self = this;
 			self.mainData = [];
-			self.$Utils.loadAll(['getMainData'], self);
+			if(self.num){
+				self.change(self.num)
+			}else{
+				self.$Utils.loadAll(['getMainData'], self);
+			}
 		},
 		
 		onReachBottom() {

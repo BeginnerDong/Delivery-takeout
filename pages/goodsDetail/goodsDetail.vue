@@ -3,7 +3,14 @@
 		
 		<!-- banner -->
 		<div class="detailxqBan oh">
-			<img :src="mainData.bannerImg&&mainData.bannerImg[0]?mainData.bannerImg[0].url:''" alt="">
+			<swiper class="swiper-box"  autoplay="true" interval="5000" duration="1000" style="width: 100%;height: 400rpx;">
+				<block v-for="(item,index) in mainData.bannerImg" :key="index">
+					<swiper-item class="swiper-item">
+						<image :src="item.url" class="slide-image" style="width: 100%;height: 400rpx;"/>
+					</swiper-item>
+				</block>
+			</swiper>
+			
 		</div>
 		
 		<div class="pdlr4 pdt10 pdb10">	

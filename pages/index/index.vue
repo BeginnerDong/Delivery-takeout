@@ -3,7 +3,14 @@
 		<div class="pdlr4">
 			<!-- banner -->
 			<div class="ind_banner oh pdtb15 radius10">
-				<img :src="userInfoData.mainImg&&userInfoData.mainImg[0]?userInfoData.mainImg[0].url:''" alt="">
+				<swiper class="swiper-box"  autoplay="true" interval="5000" duration="1000" style="width: 100%;height: 480rpx;">
+					<block v-for="(item,index) in userInfoData.mainImg" :key="index">
+						<swiper-item class="swiper-item">
+							<image :src="item.url" class="slide-image" style="width: 100%;height: 480rpx;"/>
+						</swiper-item>
+					</block>
+				</swiper>
+				<!-- <img :src="userInfoData.mainImg&&userInfoData.mainImg[0]?userInfoData.mainImg[0].url:''" alt=""> -->
 			</div>
 			<div class="inde_msgBox">
 				<ul>
@@ -41,7 +48,7 @@
 					<div style="width: 100%;background: #2FA0ED;color: #fff;text-align: center;border-radius: 10rpx;line-height: 60rpx;">{{item.menu}}</div>
 					<div class="item">
 						<div class="infor" style="margin: 30rpx 0;"  v-for="(c_item,c_index) in item.data" :key="c_index">
-							<div class="ll" :data-id="c_item.id">
+							<div class="ll" :data-id="c_item.id" @click="Router.navigateTo({route:{path:'/pages/goodsDetail/goodsDetail?id='+$event.currentTarget.dataset.id}})">
 								<img class="pic" :src="c_item.mainImg&&c_item.mainImg[0]?c_item.mainImg[0].url:''"/>
 							</div>
 							<div class="rr">
@@ -50,7 +57,7 @@
 									{{c_item.title}}
 								</div>
 								<div class=" Bmny">
-									<div class="flex">
+									<div class="flex" :data-id="c_item.id" @click="Router.navigateTo({route:{path:'/pages/goodsDetail/goodsDetail?id='+$event.currentTarget.dataset.id}})">
 										<div class="price fs13">{{c_item.price}}</div>
 										<!-- <div class="flex fs12 red mgl10 mgr10"><img class="zhe" src="../../static/images/home-icon4.png">{{c_item.discount}}折</div> -->
 										<div class="yuanJia fs12" v-if="c_item.o_price!=''">{{c_item.o_price}}</div>
@@ -320,6 +327,8 @@
 						if (res.confirm) {
 							for (var i = 0; i < self.cartData.length; i++) {
 								self.$Utils.delStorageArray('cartDataTwo', self.cartData[i], 'id');
+								var orginFindItem = self.$Utils.findItemInArray(self.originData, 'id', self.cartData[i].id);
+								self.originData[orginFindItem[0]].count = 0;
 							};
 							self.cartData = self.$Utils.getStorageArray('cartDataTwo');
 							self.carMxShow()
@@ -412,30 +421,73 @@
 				if (type == '+') {
 					
 					var findItem = self.$Utils.findItemInArray(self.cartData, 'id', self.mainData[index].data[c_index].id);
+					var orginFindItem = self.$Utils.findItemInArray(self.originData, 'id', self.mainData[index].data[c_index].id);
+					console.log('orginFindItem',orginFindItem)
 					if(self.mainData[index].data[c_index].count==0){
 						self.mainData[index].data[c_index].count++;
+						self.originData[orginFindItem[0]].count++
 						self.cartData.push(self.mainData[index].data[c_index])
 					}else{
 						
 						self.cartData[findItem[0]].count++
 						console.log('32423',self.cartData[findItem[0]].count)
 						self.mainData[index].data[c_index].count++;
+						self.originData[orginFindItem[0]].count++
 					};
 					
 					console.log('self.cartData',self.cartData)
 					console.log('self.mainData',self.mainData)
 				}else{
+					var orginFindItem = self.$Utils.findItemInArray(self.originData, 'id', self.mainData[index].data[c_index].id);
 					if(self.mainData[index].data[c_index].count >= 1) {
 						var findItem = self.$Utils.findItemInArray(self.cartData, 'id', self.mainData[index].data[c_index].id);
 						if(self.mainData[index].data[c_index].count==1){
 							self.cartData.splice(findItem[0], 1);
+							self.originData[orginFindItem[0]].count = 0
 						}else{
-					
+							
 							self.cartData[findItem[0]].count--
+							self.originData[orginFindItem[0]].count--
 						}
 						self.mainData[index].data[c_index].count--;
+						
 					}
 				};
+				self.mainData = [];
+				console.log('aaaaaa?')
+				for (var i = 0; i < self.originData.length; i++) {
+					if(self.mainData.length>0){
+						var hasone = false;
+						for(var j =0;j<self.mainData.length;j++){
+							if(self.originData[i].label[self.originData[i].category_id].title==self.mainData[j].menu){
+								self.mainData[j].data.push(self.originData[i]);
+								hasone = true;
+							};
+						};
+						if(!hasone){
+							self.mainData.push({
+								menu: self.originData[i].label[self.originData[i].category_id].title,
+								id:'a'+ self.originData[i].label[self.originData[i].category_id].id,
+								data:[self.originData[i]]
+							});
+						};
+					}else{
+						self.mainData.push({
+							menu: self.originData[i].label[self.originData[i].category_id].title,
+							id:'a'+ self.originData[i].label[self.originData[i].category_id].id,
+							data:[self.originData[i]]
+						})
+					};
+				};
+				for (var i = 0; i < self.mainData.length; i++) {
+					if(i>0){
+						self.mainData[i].height = self.mainData[i].data.length*70+50+self.mainData[i-1].height
+					}else{
+						self.mainData[i].height = self.mainData[i].data.length*70+50
+					}
+					
+				}
+				console.log('23243',self.$Utils.getStorageArray('cartDataTwo'))
 				self.countPrice()
 			},
 			

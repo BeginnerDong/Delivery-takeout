@@ -17,7 +17,7 @@
 						<p class="tit avoidOverflow">{{item.title}}</p>
 						<p class="specs flexEnd">
 							<span class="num">×{{item.count}}</span>
-							<span class="mny">￥{{item.price}}</span>
+							<span class="mny">￥{{item.unit_price}}</span>
 						</p>
 					</li>
 					<li class="flexRowBetween fs13 msgLis" >
