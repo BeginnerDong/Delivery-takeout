@@ -17,10 +17,10 @@
 			<h1 class="ftn">{{mainData.title}}</h1>
 			<p class="pdt5 flexRowBetween">
 				<span class="price">{{mainData.price}}</span>
-				<!-- <span class="addCar fs12 flexEnd color6" @click="collect()">
+				<span class="addCar fs12 flexEnd color6" @click="collect()">
 					<img style="width: 15px; height: 15px; display: block;margin-right: 5px;" 
-					src="../../static/images/goods-icon.png" alt=""/>加入购物车
-				</span> -->
+					src="../../static/images/goods-icon.png" alt=""/>{{!isCollect?'加入购物车':'从购物车移除'}}
+				</span>
 			</p>
 		</div>
 		
@@ -144,17 +144,34 @@
 					return;
 				};
 				if(self.isCollect){
-					var res = self.$Utils.delStorageArray('cartDataTwo',self.mainData,'id');
-					if (res) {
-						self.isCollect = false;
-						self.$Utils.showToast('取消成功', 'none');
-					};
+					
+					self.isCollect = false;
+					self.mainData.count = 0;
+					self.$Utils.showToast('取消成功', 'none');
+					self.$Utils.delStorageArray('cartDataTwo',self.mainData,'id');
+				
 				}else{
-					var res = self.$Utils.setStorageArray('cartDataTwo', self.mainData, 'id', 999);
-					if (res) {
-						self.isCollect = true;
-						self.$Utils.showToast('加入成功', 'none');
+					if (self.mainData.stock==0) {
+						uni.showModal({
+							title: '提示',
+							content: '该商品库存不足！',
+							confirmColor: '#ca1c1d',
+							showCancel:false,
+							success: function(res) {
+								if (res.confirm) {
+					
+								} else if (res.cancel) {
+					
+								}
+							}
+						});
+						return
 					};
+					self.isCollect = true;
+					self.mainData.count = 1;
+					self.$Utils.showToast('加入成功', 'none');
+					self.$Utils.setStorageArray('cartDataTwo', self.mainData, 'id', 999);
+				
 				}
 				
 			},

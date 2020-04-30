@@ -30,8 +30,9 @@
 				<li class="item">
 					<div class="title fs13">店铺主图</div>
 					<div class="flex uploadImg">
-						<div class="lis" v-for="item in submitData.mainImg">
+						<div class="lis" v-for="(item,index) in submitData.mainImg" style="position: relative;">
 							<img :src="item.url" >
+								<img @click="deleteImg(index)" src="../../static/images/deleteImg.png" style="position: absolute;width: 40rpx;height:40rpx;right: -20rpx;top:-20rpx;"></img>
 						</div>
 						<div class="lis pr" @click="upLoadImg()" v-if="submitData.mainImg&&submitData.mainImg.length<5">
 							<img src="../../static/images/merchants-icon10.png" >
@@ -108,6 +109,11 @@
 		},
 		
 		methods: {
+			
+			deleteImg(index){
+				const self = this;
+				self.submitData.mainImg.splice(parseInt(index), 1);
+			},
 			
 			chooseAddress(e) {
 				const self = this;

@@ -818,11 +818,7 @@
 					self.moneyMxDate.push({title:'高峰时段附加费',price:'￥'+self.submitData.rush_price})
 				};
 				
-				if(self.tip>0){
-					self.submitData.gratuity = self.tip;
-					self.totalPrice = (parseFloat(self.totalPrice) +  parseFloat(self.submitData.gratuity)).toFixed(2);
 				
-				};
 				
 				if(self.couponTotalPrice>0){
 					self.submitData.coupon_reduce = self.couponTotalPrice;
@@ -855,9 +851,11 @@
 				console.log('22',parseFloat(self.couponTotalPrice))
 				console.log('22',parseFloat(hasReduce))
 				if(self.tip>0){
-					
+					self.submitData.gratuity = self.tip;
+					self.totalPrice = (parseFloat(self.totalPrice) +  parseFloat(self.submitData.gratuity)).toFixed(2);
 					self.moneyMxDate.push({title:'小费',price:'￥'+self.submitData.gratuity})
 				};
+				
 				var wxPay = parseFloat(self.totalPrice) + parseFloat(self.shopPrice) - parseFloat(self.couponTotalPrice) - parseFloat(hasReduce);
 				
 				if (wxPay > 0) {
