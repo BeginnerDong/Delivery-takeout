@@ -260,6 +260,7 @@
 					rider_income:0,
 					platform_income:0,
 					start_site:'',
+					start_phone:'',
 					start_longitude:'',
 					start_latitude:'',
 					end_site:'',
@@ -297,6 +298,7 @@
 			if(uni.getStorageSync('storeAddress')){
 				self.storeAddress = uni.getStorageSync('storeAddress');
 				self.submitData.start_site = self.storeAddress.address;
+				self.submitData.start_phone = self.storeAddress.phone;
 				self.submitData.start_latitude = self.storeAddress.latitude;
 				self.submitData.start_longitude = self.storeAddress.longitude;
 			}
